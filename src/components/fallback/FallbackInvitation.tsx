@@ -17,7 +17,15 @@ export default function FallbackInvitation({
           <button type="button" className="mb-6 text-sm text-[var(--teal)]" onClick={onBack}>
             ← Kembali ke dunia
           </button>
-        ) : null}
+        ) : (
+          <button
+            type="button"
+            className="mb-6 text-sm text-[var(--teal)]"
+            onClick={() => window.location.reload()}
+          >
+            Coba buka taman lagi
+          </button>
+        )}
         <p className="text-sm tracking-[0.3em] text-[var(--gold)]">THE WEDDING OF</p>
         {guestName ? (
           <p className="mt-4 text-sm">

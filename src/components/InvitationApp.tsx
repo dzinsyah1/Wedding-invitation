@@ -40,8 +40,9 @@ export default function InvitationApp() {
     });
     const offReady = gameEvents.on(GAME_EVENTS.GAME_READY, () => {
       setReady(true);
-      store.setPhase("opening");
       store.setProgress(1);
+      const phase = useInvitationStore.getState().phase;
+      if (phase === "loading" || phase === "fallback") store.setPhase("opening");
     });
     const offError = gameEvents.on(GAME_EVENTS.GAME_ERROR, () => store.setPhase("fallback"));
     const offPrompt = gameEvents.on(GAME_EVENTS.SHOW_PROMPT, (payload) => {
@@ -59,12 +60,6 @@ export default function InvitationApp() {
       if (id) track("location_visited", { locationId: id });
     });
 
-    const timeout = window.setTimeout(() => {
-      if (!useInvitationStore.getState().phase || useInvitationStore.getState().phase === "loading") {
-        if (!ready) store.setPhase("fallback");
-      }
-    }, 12000);
-
     return () => {
       offProgress();
       offReady();
@@ -73,7 +68,6 @@ export default function InvitationApp() {
       offHide();
       offModal();
       offVisit();
-      window.clearTimeout(timeout);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -103,7 +97,7 @@ export default function InvitationApp() {
 
   return (
     <main className="relative h-[100dvh] w-full overflow-hidden bg-[var(--cream)]">
-      {showWorld ? <GameCanvas reducedMotion={store.reducedMotion} /> : null}
+      <GameCanvas reducedMotion={store.reducedMotion} />
       {showWorld ? (
         <div className="pointer-events-none absolute inset-0 z-[5] shadow-[inset_0_0_160px_rgba(20,50,90,0.28)]" />
       ) : null}

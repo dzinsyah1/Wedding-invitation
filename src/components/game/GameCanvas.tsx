@@ -21,7 +21,8 @@ export default function GameCanvas({ reducedMotion }: { reducedMotion: boolean }
           reducedMotion,
           isMobile: window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768,
         });
-      } catch {
+      } catch (error) {
+        console.error("Wedding game failed to start", error);
         gameEvents.emit(GAME_EVENTS.GAME_ERROR);
       }
     })();

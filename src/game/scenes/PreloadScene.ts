@@ -91,7 +91,7 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   create() {
-    CHROMA.forEach(([raw, , mode, kind]) => {
+    const jobs: Array<() => void> = CHROMA.map(([raw, , mode, kind]) => () => {
       const dest = raw.replace("raw-", "pixar-");
       try {
         chromaAndCrop(this, raw, dest, mode, kind);
@@ -100,7 +100,6 @@ export class PreloadScene extends Phaser.Scene {
       }
     });
 
-    // Chroma key player sprites (cyan background)
     const playerFrames = [
       "raw-player-idle",
       "raw-player-walk-a",
@@ -108,25 +107,47 @@ export class PreloadScene extends Phaser.Scene {
       "raw-player-jump",
     ];
     playerFrames.forEach((raw) => {
-      const dest = raw.replace("raw-", "");
-      try {
-        chromaAndCrop(this, raw, dest, "blue", "cyan");
-      } catch { /* fall back */ }
-      if (!this.textures.exists(dest) && this.textures.exists(raw)) {
-        const img = this.textures.get(raw).getSourceImage() as HTMLImageElement;
-        this.textures.addImage(dest, img);
-      }
+      jobs.push(() => {
+        const dest = raw.replace("raw-", "");
+        try {
+          chromaAndCrop(this, raw, dest, "blue", "cyan");
+        } catch {
+          /* fall back */
+        }
+        if (!this.textures.exists(dest) && this.textures.exists(raw)) {
+          const img = this.textures.get(raw).getSourceImage() as HTMLImageElement;
+          this.textures.addImage(dest, img);
+        }
+      });
     });
 
-    const petal = this.add.graphics();
-    petal.fillStyle(0xfff6ee, 0.95);
-    petal.fillEllipse(8, 8, 11, 6);
-    petal.fillStyle(0xffe8c8, 0.5);
-    petal.fillEllipse(7, 7, 4, 2.5);
-    petal.generateTexture("petal", 16, 16);
-    petal.destroy();
+    let index = 0;
+    const runBatch = () => {
+      const end = Math.min(index + 4, jobs.length);
+      while (index < end) {
+        jobs[index]();
+        index += 1;
+      }
+      gameEvents.emit(GAME_EVENTS.LOAD_PROGRESS, {
+        progress: 0.75 + (index / jobs.length) * 0.24,
+      });
+      if (index < jobs.length) {
+        this.time.delayedCall(0, runBatch);
+        return;
+      }
 
-    gameEvents.emit(GAME_EVENTS.LOAD_PROGRESS, { progress: 1 });
-    this.time.delayedCall(180, () => this.scene.start("WeddingWorldScene"));
+      const petal = this.add.graphics();
+      petal.fillStyle(0xfff6ee, 0.95);
+      petal.fillEllipse(8, 8, 11, 6);
+      petal.fillStyle(0xffe8c8, 0.5);
+      petal.fillEllipse(7, 7, 4, 2.5);
+      petal.generateTexture("petal", 16, 16);
+      petal.destroy();
+
+      gameEvents.emit(GAME_EVENTS.LOAD_PROGRESS, { progress: 1 });
+      this.time.delayedCall(180, () => this.scene.start("WeddingWorldScene"));
+    };
+
+    runBatch();
   }
 }

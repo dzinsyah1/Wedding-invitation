@@ -1,5 +1,5 @@
-import InvitationApp from "@/components/InvitationApp";
+import { redirect } from "next/navigation";
 
 export default function WeddingPage() {
-  return <InvitationApp />;
+  redirect("/");
 }
