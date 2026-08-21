@@ -22,14 +22,14 @@ export const wedding: WeddingData = {
     groom: {
       fullName: "Mugh Dzin Syah",
       nickname: "Dzin Syah",
-      photo: "/images/groom-portrait.png",
+      photo: "/images/groom-portrait.jpg",
       parents: "Putra dari Bapak Ahmad Pratama & Ibu Siti Aminah",
       title: "The Groom",
     },
     bride: {
       fullName: "Mirrotin Nuriyyah",
       nickname: "Titin",
-      photo: "/images/bride-portrait.png",
+      photo: "/images/bride-portrait.jpg",
       parents: "Putri dari Bapak Hasan Abdullah & Ibu Fatimah Zahra",
       title: "The Bride",
     },
@@ -64,7 +64,7 @@ export const wedding: WeddingData = {
       title: "First Meeting",
       description:
         "Kami bertemu di sebuah taman kampus yang teduh. Percakapan sederhana itu menjadi awal dari perjalanan yang tak pernah kami duga.",
-      image: "/images/gallery-meeting.png",
+      image: "/images/gallery-meeting.jpg",
     },
     {
       id: "closer",
@@ -72,7 +72,7 @@ export const wedding: WeddingData = {
       title: "We Became Closer",
       description:
         "Waktu mengajarkan kami untuk tumbuh bersama. Dari tawa, doa, hingga langkah-langkah kecil yang perlahan terasa seperti rumah.",
-      image: "/images/gallery-closer.png",
+      image: "/images/gallery-closer.jpg",
     },
     {
       id: "proposal",
@@ -80,7 +80,7 @@ export const wedding: WeddingData = {
       title: "The Proposal",
       description:
         "Di bawah cahaya senja dan bunga yang berguguran, sebuah janji diucapkan. Bukan hanya untuk hari ini, tetapi untuk seumur hidup.",
-      image: "/images/gallery-proposal.png",
+      image: "/images/gallery-proposal.jpg",
     },
     {
       id: "wedding",
@@ -88,28 +88,28 @@ export const wedding: WeddingData = {
       title: "Our Wedding",
       description:
         "Kini kami mengundang Anda untuk menjadi saksi dan bagian dari hari yang kami nantikan dengan penuh syukur.",
-      image: "/images/gallery-wedding.png",
+      image: "/images/gallery-wedding.jpg",
     },
   ],
   gallery: [
     {
       id: "g1",
-      src: "/images/gallery-meeting.png",
+      src: "/images/gallery-meeting.jpg",
       caption: "Awal pertemuan di taman yang tenang",
     },
     {
       id: "g2",
-      src: "/images/gallery-closer.png",
+      src: "/images/gallery-closer.jpg",
       caption: "Tumbuh lebih dekat, langkah demi langkah",
     },
     {
       id: "g3",
-      src: "/images/gallery-proposal.png",
+      src: "/images/gallery-proposal.jpg",
       caption: "Sebuah janji di golden hour",
     },
     {
       id: "g4",
-      src: "/images/gallery-wedding.png",
+      src: "/images/gallery-wedding.jpg",
       caption: "Menuju hari yang kami nantikan",
     },
   ],

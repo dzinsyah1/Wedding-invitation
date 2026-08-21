@@ -2,6 +2,7 @@ import * as Phaser from "phaser";
 import type { WorldConfig } from "@/types/wedding";
 import { textureKey } from "@/game/world/env";
 import { DoveFlock } from "@/game/systems/doves";
+import { qualitySettings, type QualitySettings } from "@/game/quality";
 
 export class AmbientSystem {
   private birdTimer = 0;
@@ -9,32 +10,38 @@ export class AmbientSystem {
   private fireflies: Phaser.GameObjects.Arc[] = [];
   private pathFairies: Phaser.GameObjects.Arc[] = [];
   private doves: DoveFlock | null = null;
+  private quality: QualitySettings;
 
   constructor(
     private scene: Phaser.Scene,
     private world: WorldConfig,
     private reducedMotion: boolean
   ) {
+    this.quality = (scene.game.registry.get("quality") as QualitySettings) ?? qualitySettings("medium");
     if (reducedMotion) return;
-    this.spawnButterflies();
-    this.createPetals();
-    this.createPathFairyMotes();
-    this.doves = new DoveFlock(scene, world);
+    if (this.quality.butterflies) this.spawnButterflies();
+    if (this.quality.petals) this.createPetals();
+    if (this.quality.tier === "high") this.createPathFairyMotes();
+    if (this.quality.doves) this.doves = new DoveFlock(scene, world);
   }
 
   update(delta: number, playerX: number) {
     if (this.reducedMotion) return;
-    this.birdTimer += delta;
-    this.petalBurstTimer += delta;
-    if (this.birdTimer > 8000 + Math.random() * 5000) {
-      this.spawnBird(playerX);
-      this.birdTimer = 0;
+    if (this.quality.birds) {
+      this.birdTimer += delta;
+      if (this.birdTimer > 8000 + Math.random() * 5000) {
+        this.spawnBird(playerX);
+        this.birdTimer = 0;
+      }
     }
-    if (this.petalBurstTimer > 2800) {
-      this.spawnPetalBurst(playerX);
-      this.petalBurstTimer = 0;
+    if (this.quality.petals) {
+      this.petalBurstTimer += delta;
+      if (this.petalBurstTimer > 2800) {
+        this.spawnPetalBurst(playerX);
+        this.petalBurstTimer = 0;
+      }
     }
-    this.updateFireflies(playerX);
+    if (this.quality.tier === "high") this.updateFireflies(playerX);
     this.doves?.update(delta, playerX);
   }
 
@@ -64,7 +71,8 @@ export class AmbientSystem {
       (loc) => loc.id === "story" || loc.id === "couple" || loc.id === "home" || loc.id === "reception"
     );
     spots.forEach((spot, s) => {
-      for (let i = 0; i < 3; i += 1) {
+      const count = this.quality.tier === "high" ? 3 : 1;
+      for (let i = 0; i < count; i += 1) {
         const bug = this.scene.add.image(spot.x - 24 + i * 22, this.world.groundY - 90, key);
         bug.setDisplaySize(26, 26);
         bug.setDepth(12);
@@ -91,7 +99,7 @@ export class AmbientSystem {
       speedX: { min: -22, max: 10 },
       scale: { start: 0.75, end: 0.2 },
       rotate: { min: 0, max: 360 },
-      frequency: 420,
+      frequency: this.quality.tier === "high" ? 420 : 900,
       quantity: 1,
       alpha: { start: 0.85, end: 0.05 },
     });
@@ -101,7 +109,7 @@ export class AmbientSystem {
 
   private spawnPetalBurst(playerX: number) {
     if (!this.scene.textures.exists("petal")) return;
-    for (let i = 0; i < 4; i += 1) {
+    for (let i = 0; i < (this.quality.tier === "high" ? 4 : 2); i += 1) {
       const petal = this.scene.add.image(
         playerX + Math.random() * 160 - 40,
         30 + Math.random() * 40,

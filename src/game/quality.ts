@@ -1,0 +1,125 @@
+import type { ChromaKind } from "@/game/world/chroma";
+
+export type QualityTier = "high" | "medium" | "low";
+
+export type ChromaAsset = {
+  key: string;
+  file: string;
+  mode: "blue" | "warm";
+  kind: ChromaKind;
+  minTier: QualityTier;
+};
+
+const RANK: Record<QualityTier, number> = { low: 0, medium: 1, high: 2 };
+
+export function tierAtLeast(current: QualityTier, min: QualityTier) {
+  return RANK[current] >= RANK[min];
+}
+
+/** Only textures the garden actually draws — village leftovers stay off the network. */
+export const CHROMA_ASSETS: ChromaAsset[] = [
+  { key: "house", file: "pixar-house.png", mode: "blue", kind: "cutout", minTier: "low" },
+  { key: "mosque", file: "pixar-mosque.png", mode: "blue", kind: "cutout", minTier: "low" },
+  { key: "venue", file: "pixar-venue.png", mode: "blue", kind: "cutout", minTier: "low" },
+  { key: "couple", file: "pixar-couple.png", mode: "blue", kind: "frame", minTier: "low" },
+  { key: "clock", file: "pixar-clock.png", mode: "blue", kind: "cutout", minTier: "low" },
+  { key: "mailbox", file: "pixar-mailbox.png", mode: "blue", kind: "cutout", minTier: "low" },
+  { key: "gift", file: "pixar-gift.png", mode: "blue", kind: "cutout", minTier: "low" },
+  { key: "story", file: "pixar-story.png", mode: "blue", kind: "cutout", minTier: "low" },
+  { key: "gallery", file: "pixar-gallery.png", mode: "blue", kind: "cutout", minTier: "low" },
+  { key: "finale", file: "pixar-finale.png", mode: "blue", kind: "cutout", minTier: "low" },
+  { key: "leaf-wall", file: "pixar-leaf-wall.png", mode: "blue", kind: "cutout", minTier: "low" },
+  { key: "garden-tree", file: "pixar-garden-tree.png", mode: "blue", kind: "cutout", minTier: "low" },
+  { key: "mixed-cluster", file: "pixar-mixed-cluster.png", mode: "blue", kind: "cutout", minTier: "low" },
+  { key: "white-roses", file: "pixar-white-roses.png", mode: "blue", kind: "cutout", minTier: "low" },
+  { key: "garden-lantern", file: "pixar-garden-lantern.png", mode: "blue", kind: "cutout", minTier: "low" },
+  { key: "bush", file: "pixar-bush.png", mode: "blue", kind: "plant", minTier: "low" },
+  { key: "couple-blink", file: "pixar-couple-blink.png", mode: "blue", kind: "frame", minTier: "medium" },
+  { key: "couple-wave", file: "pixar-couple-wave.png", mode: "blue", kind: "frame", minTier: "medium" },
+  { key: "treeline", file: "pixar-treeline.png", mode: "warm", kind: "cutout", minTier: "medium" },
+  { key: "garden-clouds", file: "pixar-garden-clouds.png", mode: "blue", kind: "cutout", minTier: "medium" },
+  { key: "leaf-shrub", file: "pixar-leaf-shrub.png", mode: "blue", kind: "cutout", minTier: "medium" },
+  { key: "tall-blooms", file: "pixar-tall-blooms.png", mode: "blue", kind: "cutout", minTier: "medium" },
+  { key: "low-blooms", file: "pixar-low-blooms.png", mode: "blue", kind: "cutout", minTier: "medium" },
+  { key: "rose-arch", file: "pixar-rose-arch.png", mode: "blue", kind: "cutout", minTier: "medium" },
+  { key: "hang-vines", file: "pixar-hang-vines.png", mode: "warm", kind: "cutout", minTier: "medium" },
+  { key: "blossom-canopy", file: "pixar-blossom-canopy.png", mode: "blue", kind: "cutout", minTier: "medium" },
+  { key: "bird", file: "pixar-bird.png", mode: "blue", kind: "cutout", minTier: "high" },
+  { key: "butterfly", file: "pixar-butterfly.png", mode: "blue", kind: "cutout", minTier: "high" },
+  { key: "dove-fly-a", file: "pixar-dove-fly-a.png", mode: "blue", kind: "cutout", minTier: "high" },
+  { key: "dove-fly-b", file: "pixar-dove-fly-b.png", mode: "blue", kind: "cutout", minTier: "high" },
+  { key: "dove-idle", file: "pixar-dove-idle.png", mode: "blue", kind: "cutout", minTier: "high" },
+];
+
+export const PLAYER_FRAMES = [
+  { raw: "raw-player-idle", dest: "player-idle", file: "player-idle.png" },
+  { raw: "raw-player-walk-a", dest: "player-walk-a", file: "player-walk-a.png" },
+  { raw: "raw-player-walk-b", dest: "player-walk-b", file: "player-walk-b.png" },
+  { raw: "raw-player-jump", dest: "player-jump", file: "player-jump.png" },
+] as const;
+
+export function detectQuality(reducedMotion = false): QualityTier {
+  if (typeof window === "undefined") return "medium";
+  if (reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return "low";
+  }
+
+  const nav = navigator as Navigator & {
+    deviceMemory?: number;
+    connection?: { saveData?: boolean; effectiveType?: string };
+  };
+  const connection = nav.connection;
+  if (connection?.saveData) return "low";
+  if (connection?.effectiveType === "2g" || connection?.effectiveType === "slow-2g") return "low";
+
+  const mobile =
+    window.matchMedia("(pointer: coarse)").matches ||
+    window.innerWidth < 768 ||
+    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const memory = nav.deviceMemory;
+  const cores = navigator.hardwareConcurrency || 4;
+
+  if (memory !== undefined && memory <= 2) return "low";
+  if (mobile && window.innerWidth < 380) return "low";
+  if (mobile && memory !== undefined && memory <= 4) return "low";
+  if (mobile && cores <= 4) return "low";
+  if (mobile) return "medium";
+  if (memory !== undefined && memory <= 4) return "medium";
+  return "high";
+}
+
+export function qualitySettings(tier: QualityTier) {
+  return {
+    tier,
+    fps: tier === "high" ? 60 : 30,
+    antialias: tier === "high",
+    canvasRenderer: tier === "low",
+    overlap: tier === "low" ? 0.12 : tier === "medium" ? 0.2 : 0.28,
+    scatterMul: tier === "low" ? 1.85 : tier === "medium" ? 1.35 : 1,
+    sway: tier === "high",
+    canopy: tier !== "low",
+    distantGarden: tier !== "low",
+    lanterns: tier !== "low",
+    fairyLights: tier === "high",
+    arches: tier !== "low",
+    flowerScatter: tier !== "low",
+    foregroundMix: tier !== "low",
+    clouds: tier !== "low",
+    petals: tier !== "low",
+    butterflies: tier === "high",
+    doves: tier === "high",
+    birds: tier === "high",
+    lighting: tier !== "low",
+    groundDetail: tier === "high",
+  };
+}
+
+export type QualitySettings = ReturnType<typeof qualitySettings>;
+
+export function cutAssetUrl(file: string) {
+  return `/images/pixar/cut/${file}?v=opt2`;
+}
+
+export function cutPlayerUrl(file: string) {
+  return `/images/cut/${file}?v=opt2`;
+}

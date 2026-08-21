@@ -15,13 +15,18 @@ import {
 import { blob, fairyLights, gfx, hangingLantern } from "@/game/world/paint";
 import { scatter, tileMix, tileStrip, textureKey } from "@/game/world/env";
 import { palette } from "@/data/theme";
+import { qualitySettings, type QualitySettings } from "@/game/quality";
 
 export class WorldBuilder {
+  private quality: QualitySettings;
+
   constructor(
     private scene: Phaser.Scene,
     private world: WorldConfig,
     private reducedMotion: boolean
-  ) {}
+  ) {
+    this.quality = (scene.game.registry.get("quality") as QualitySettings) ?? qualitySettings("medium");
+  }
 
   build() {
     this.createSky();
@@ -47,19 +52,21 @@ export class WorldBuilder {
     sky.setScrollFactor(0);
     sky.setDepth(-30);
 
-    tileStrip(this.scene, "pixar-garden-clouds", {
-      y: 168,
-      height: 70,
-      worldWidth: this.world.width,
-      scroll: this.world.parallax.clouds,
-      depth: -24,
-      overlap: 0.08,
-      start: 40,
-      jitterY: 28,
-      heightJitter: 18,
-      flip: true,
-      alpha: 0.55,
-    });
+    if (this.quality.clouds) {
+      tileStrip(this.scene, "pixar-garden-clouds", {
+        y: 168,
+        height: 70,
+        worldWidth: this.world.width,
+        scroll: this.world.parallax.clouds,
+        depth: -24,
+        overlap: this.quality.overlap * 0.4,
+        start: 40,
+        jitterY: 28,
+        heightJitter: 18,
+        flip: true,
+        alpha: 0.55,
+      });
+    }
 
     const mist = gfx(this.scene);
     mist.fillStyle(0xfff1d6, 0.18);
@@ -69,6 +76,7 @@ export class WorldBuilder {
   }
 
   private createDistantGarden() {
+    if (!this.quality.distantGarden) return;
     const { width, groundY, parallax } = this.world;
     const scroll = parallax.mountains * 0.7;
 
@@ -78,7 +86,7 @@ export class WorldBuilder {
       worldWidth: width,
       scroll,
       depth: -18,
-      overlap: 0.34,
+      overlap: this.quality.overlap,
       start: -100,
       jitterY: 10,
       heightJitter: 22,
@@ -90,7 +98,7 @@ export class WorldBuilder {
       y: groundY - 14,
       height: 150,
       worldWidth: width,
-      step: 280,
+      step: Math.round(280 * this.quality.scatterMul),
       scroll: parallax.hills,
       depth: -13,
       jitterX: 36,
@@ -107,7 +115,7 @@ export class WorldBuilder {
       worldWidth: width,
       scroll: parallax.hills,
       depth: -11,
-      overlap: 0.26,
+      overlap: this.quality.overlap,
       start: -50,
       jitterY: 6,
       heightJitter: 12,
@@ -123,7 +131,7 @@ export class WorldBuilder {
       y: groundY - 2,
       height: 168,
       worldWidth: width,
-      step: 280,
+      step: Math.round(280 * this.quality.scatterMul),
       scroll: 1,
       depth: 3,
       jitterX: 50,
@@ -143,18 +151,20 @@ export class WorldBuilder {
       worldWidth: width,
       scroll: 1,
       depth: 4,
-      overlap: 0.22,
+      overlap: this.quality.overlap,
       start: -40,
       jitterY: 6,
       heightJitter: 18,
       flip: true,
     }).forEach((wall, i) => this.sway(wall, 0.22 + (i % 2) * 0.05));
 
+    if (!this.quality.flowerScatter) return;
+
     scatter(this.scene, ["pixar-leaf-shrub", "pixar-bush"], {
       y: groundY + 2,
       height: 54,
       worldWidth: width,
-      step: 200,
+      step: Math.round(200 * this.quality.scatterMul),
       scroll: 1,
       depth: 5,
       jitterX: 36,
@@ -172,7 +182,7 @@ export class WorldBuilder {
       y: groundY + 2,
       height: 48,
       worldWidth: width,
-      step: 260,
+      step: Math.round(260 * this.quality.scatterMul),
       scroll: 1,
       depth: 5,
       jitterX: 40,
@@ -190,7 +200,7 @@ export class WorldBuilder {
       y: groundY - 2,
       height: 88,
       worldWidth: width,
-      step: 380,
+      step: Math.round(380 * this.quality.scatterMul),
       scroll: 1,
       depth: 5,
       jitterX: 48,
@@ -223,7 +233,8 @@ export class WorldBuilder {
     path.fillStyle(0xe7d9c2, 0.55);
     path.fillRect(-280, groundY + 2, width + 560, 14);
 
-    for (let x = -30; x < width + 40; x += 26) {
+    const stoneStep = this.quality.groundDetail ? 26 : 52;
+    for (let x = -30; x < width + 40; x += stoneStep) {
       const ox = x + ((x * 17) % 8) - 4;
       const stoneW = 22 + (x % 11);
       blob(path, ox, groundY + 16, stoneW, 11, 0xb39a7c, 0.38);
@@ -239,26 +250,29 @@ export class WorldBuilder {
     const lanternKey = textureKey(this.scene, "pixar-garden-lantern");
     const archKey = textureKey(this.scene, "pixar-rose-arch");
 
-    this.world.locations.forEach((loc, i) => {
-      const next = this.world.locations[i + 1];
-      if (!next || !this.scene.textures.exists(lanternKey)) return;
-      const x = loc.x + (next.x - loc.x) * (i % 2 === 0 ? 0.4 : 0.6);
-      const lamp = this.scene.add.image(x, groundY + 6, lanternKey);
-      lamp.setOrigin(0.5, 1);
-      lamp.setDisplaySize(34, 86);
-      lamp.setDepth(9);
-      if (!this.reducedMotion) {
-        this.scene.tweens.add({
-          targets: lamp,
-          alpha: { from: 0.86, to: 1 },
-          duration: 1500 + Math.random() * 400,
-          yoyo: true,
-          repeat: -1,
-        });
-      }
-    });
+    if (this.quality.lanterns) {
+      this.world.locations.forEach((loc, i) => {
+        const next = this.world.locations[i + 1];
+        if (!next || !this.scene.textures.exists(lanternKey)) return;
+        const x = loc.x + (next.x - loc.x) * (i % 2 === 0 ? 0.4 : 0.6);
+        const lamp = this.scene.add.image(x, groundY + 6, lanternKey);
+        lamp.setOrigin(0.5, 1);
+        lamp.setDisplaySize(34, 86);
+        lamp.setDepth(9);
+        if (!this.reducedMotion && this.quality.sway) {
+          this.scene.tweens.add({
+            targets: lamp,
+            alpha: { from: 0.86, to: 1 },
+            duration: 1500 + Math.random() * 400,
+            yoyo: true,
+            repeat: -1,
+          });
+        }
+      });
+    }
 
     this.world.locations.forEach((loc, i) => {
+      if (!this.quality.arches) return;
       if (i % 3 !== 1) return;
       const next = this.world.locations[i + 1];
       if (!next || !this.scene.textures.exists(archKey)) return;
@@ -295,7 +309,10 @@ export class WorldBuilder {
       if (!builder) return;
       builder(this.scene, loc.x, groundY).setDepth(10);
 
-      if (loc.id === "home" || loc.id === "reception" || loc.id === "story") {
+      if (
+        this.quality.fairyLights &&
+        (loc.id === "home" || loc.id === "reception" || loc.id === "story")
+      ) {
         const lights = fairyLights(this.scene, loc.x, groundY - 204, 230, this.reducedMotion);
         lights.setDepth(11);
         lights.setAlpha(0.75);
@@ -304,6 +321,7 @@ export class WorldBuilder {
   }
 
   private createCanopy() {
+    if (!this.quality.canopy) return;
     const { width, parallax } = this.world;
     const scroll = Math.min(1.08, parallax.foreground);
 
@@ -314,7 +332,7 @@ export class WorldBuilder {
       worldWidth: width,
       scroll,
       depth: 37,
-      overlap: 0.28,
+      overlap: this.quality.overlap,
       start: -70,
       jitterY: 12,
       heightJitter: 28,
@@ -329,7 +347,7 @@ export class WorldBuilder {
       worldWidth: width,
       scroll,
       depth: 38,
-      overlap: 0.2,
+      overlap: this.quality.overlap,
       start: 80,
       jitterY: 16,
       heightJitter: 18,
@@ -339,6 +357,7 @@ export class WorldBuilder {
   }
 
   private createHangingLanterns() {
+    if (!this.quality.lanterns) return;
     this.world.locations.forEach((loc, i) => {
       const next = this.world.locations[i + 1];
       if (!next) return;
@@ -387,12 +406,14 @@ export class WorldBuilder {
       worldWidth: width,
       scroll,
       depth: 40,
-      overlap: 0.4,
+      overlap: this.quality.overlap + 0.08,
       start: -70,
       jitterY: 6,
       heightJitter: 10,
       flip: true,
     }).forEach((wall, i) => this.sway(wall, 0.1 + (i % 3) * 0.03));
+
+    if (!this.quality.foregroundMix) return;
 
     tileMix(this.scene, ["pixar-mixed-cluster", "pixar-white-roses", "pixar-low-blooms", "pixar-leaf-shrub"], {
       y: height - 2,
@@ -400,7 +421,7 @@ export class WorldBuilder {
       worldWidth: width,
       scroll,
       depth: 41,
-      overlap: 0.34,
+      overlap: this.quality.overlap,
       start: -20,
       jitterY: 8,
       heightJitter: 12,
@@ -409,7 +430,7 @@ export class WorldBuilder {
   }
 
   private sway(target: Phaser.GameObjects.GameObject, amount: number) {
-    if (this.reducedMotion) return;
+    if (this.reducedMotion || !this.quality.sway) return;
     this.scene.tweens.add({
       targets: target,
       angle: { from: -amount, to: amount },

@@ -8,7 +8,7 @@ export default function LoadingScreen({ progress }: { progress: number }) {
   return (
     <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-[var(--cream)] text-[var(--ink)]">
       <p className="font-script text-4xl text-[var(--gold)]">✦</p>
-      <h1 className="font-display mt-4 text-[34px] tracking-wide">Preparing the garden</h1>
+      <h1 className="font-display mt-4 text-[34px] tracking-wide">Menyiapkan taman</h1>
       <p className="mt-2 text-sm tracking-[0.18em] text-[var(--teal)]">
         {wedding.names.display}
       </p>

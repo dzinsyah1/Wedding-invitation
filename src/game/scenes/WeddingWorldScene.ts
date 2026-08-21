@@ -8,12 +8,13 @@ import { InteractionSystem } from "@/game/systems/InteractionSystem";
 import { AmbientSystem } from "@/game/systems/AmbientSystem";
 import { LightingSystem } from "@/game/systems/LightingSystem";
 import { AudioSystem } from "@/game/systems/AudioSystem";
+import { qualitySettings, type QualitySettings } from "@/game/quality";
 
 export class WeddingWorldScene extends Phaser.Scene {
   private player!: Player;
   private interaction!: InteractionSystem;
   private ambient!: AmbientSystem;
-  private lighting!: LightingSystem;
+  private lighting: LightingSystem | null = null;
   private audio = new AudioSystem();
   private inputDir = 0;
   private autoTarget: number | null = null;
@@ -37,6 +38,8 @@ export class WeddingWorldScene extends Phaser.Scene {
     const world = wedding.world;
     const reduced = Boolean(this.game.registry.get("reducedMotion"));
     const isMobile = Boolean(this.game.registry.get("isMobile"));
+    const settings =
+      (this.game.registry.get("quality") as QualitySettings) ?? qualitySettings("medium");
     this.isMobile = isMobile;
 
     new WorldBuilder(this, world, reduced).build();
@@ -49,7 +52,9 @@ export class WeddingWorldScene extends Phaser.Scene {
     new CameraSystem(this, this.player, world.width, world.height, reduced, isMobile);
     this.interaction = new InteractionSystem(this, this.player, world.locations, isMobile);
     this.ambient = new AmbientSystem(this, world, reduced);
-    this.lighting = new LightingSystem(this, this.player, world.width, world.height);
+    this.lighting = settings.lighting
+      ? new LightingSystem(this, this.player, world.width, world.height)
+      : null;
 
     if (this.input.keyboard) {
       this.cursors = this.input.keyboard.createCursorKeys();
@@ -131,7 +136,7 @@ export class WeddingWorldScene extends Phaser.Scene {
   update(_time: number, delta: number) {
     if (!this.player) return;
     this.ambient.update(delta, this.player.x);
-    this.lighting.update();
+    this.lighting?.update();
     if (!this.playing || this.modalOpen) {
       this.player.updateMovement(delta, 0, null, false);
       this.interaction.update();

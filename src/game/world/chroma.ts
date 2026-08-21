@@ -113,24 +113,32 @@ export function chromaAndCrop(
   sourceKey: string,
   destKey: string,
   mode: "blue" | "warm" = "blue",
-  kind: ChromaKind = "cutout"
+  kind: ChromaKind = "cutout",
+  options: { maxSize?: number; extras?: boolean } = {}
 ) {
   try {
     if (!scene.textures.exists(sourceKey)) return sourceKey;
-    const src = scene.textures.get(sourceKey).getSourceImage() as HTMLImageElement;
-    const w = src.width;
-    const h = src.height;
-    if (!w || !h) return sourceKey;
+    const src = scene.textures.get(sourceKey).getSourceImage() as HTMLImageElement | HTMLCanvasElement;
+    const srcW = src.width;
+    const srcH = src.height;
+    if (!srcW || !srcH) return sourceKey;
+
+    const maxSize = options.maxSize ?? 512;
+    const scale = Math.min(1, maxSize / Math.max(srcW, srcH));
+    const w = Math.max(1, Math.round(srcW * scale));
+    const h = Math.max(1, Math.round(srcH * scale));
 
     const scratch = document.createElement("canvas");
     scratch.width = w;
     scratch.height = h;
     const ctx = scratch.getContext("2d", { willReadFrequently: true });
     if (!ctx) return sourceKey;
-    ctx.drawImage(src, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(src, 0, 0, w, h);
     const data = ctx.getImageData(0, 0, w, h);
     const px = data.data;
     const test = mode === "warm" ? isWarmSky : isBlueSky;
+    const extras = options.extras !== false;
 
     if (kind === "cyan") {
       punchKey(px, w, h);
@@ -138,9 +146,9 @@ export function chromaAndCrop(
       for (let i = 0; i < px.length; i += 4) {
         if (test(px[i], px[i + 1], px[i + 2])) px[i + 3] = 0;
       }
-      softenEdges(px, w, h);
+      if (extras) softenEdges(px, w, h);
     }
-    if (kind === "plant") plantIntoGround(px, w, h);
+    if (kind === "plant" && extras) plantIntoGround(px, w, h);
 
     let minX = w;
     let minY = h;
@@ -165,6 +173,9 @@ export function chromaAndCrop(
     if (kind === "frame") {
       if (scene.textures.exists(destKey)) scene.textures.remove(destKey);
       scene.textures.addCanvas(destKey, scratch);
+      if (sourceKey !== destKey && scene.textures.exists(sourceKey)) {
+        scene.textures.remove(sourceKey);
+      }
       return destKey;
     }
     const pad = kind === "cyan" ? 2 : 6;
@@ -183,6 +194,9 @@ export function chromaAndCrop(
     cutCtx.drawImage(scratch, minX, minY, cw, ch, 0, 0, cw, ch);
     if (scene.textures.exists(destKey)) scene.textures.remove(destKey);
     scene.textures.addCanvas(destKey, cut);
+    if (sourceKey !== destKey && scene.textures.exists(sourceKey)) {
+      scene.textures.remove(sourceKey);
+    }
     return destKey;
   } catch {
     return sourceKey;

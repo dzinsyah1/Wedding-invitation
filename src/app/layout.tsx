@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     title: "Dzin Syah & Titin — Wedding Invitation",
     description:
       "Dengan penuh kebahagiaan, kami mengundang Anda untuk menjadi bagian dari hari istimewa kami.",
-    images: ["/images/og-image.png"],
+    images: ["/images/og-image.jpg"],
     type: "website",
   },
 };

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { GAME_EVENTS, gameEvents } from "@/game/events/gameEvents";
+import { detectQuality } from "@/game/quality";
 
 export default function GameCanvas({ reducedMotion }: { reducedMotion: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -16,10 +17,12 @@ export default function GameCanvas({ reducedMotion }: { reducedMotion: boolean }
       try {
         const { createWeddingGame } = await import("@/game/Game");
         if (destroyed || !ref.current) return;
+        const isMobile = window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
         game = createWeddingGame({
           parent: ref.current,
           reducedMotion,
-          isMobile: window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768,
+          isMobile,
+          quality: detectQuality(reducedMotion),
         });
       } catch (error) {
         console.error("Wedding game failed to start", error);
