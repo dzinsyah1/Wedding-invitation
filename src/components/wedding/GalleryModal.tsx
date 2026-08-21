@@ -24,7 +24,19 @@ export default function GalleryModal({ onClose }: { onClose: () => void }) {
         ))}
       </div>
       {item ? (
-        <div className="absolute inset-0 z-10 flex flex-col bg-black/80">
+        <div className="absolute inset-0 z-30 flex flex-col bg-[#1c1814]/92">
+          <button
+            type="button"
+            onPointerDown={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              setActive(null);
+            }}
+            className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/30 text-2xl leading-none text-white"
+            aria-label="Tutup foto"
+          >
+            ×
+          </button>
           <img src={item.src} alt={item.caption} className="h-full w-full object-contain" />
           <p className="absolute bottom-16 inset-x-4 text-center text-sm text-white">{item.caption}</p>
           <div className="absolute bottom-4 inset-x-4 flex justify-between text-white">

@@ -51,8 +51,9 @@ function punchKey(px: Uint8ClampedArray, w: number, h: number) {
 
 function isWarmSky(r: number, g: number, b: number) {
   const bright = (r + g + b) / 3;
-  const sunCore = r > 235 && g > 210 && b < 170;
-  return !sunCore && r > 175 && g > 135 && b < 210 && r > b + 8 && bright > 165;
+  const peach = r > 205 && g > 165 && b < 205 && r - b > 40 && g - b > 18 && bright > 170;
+  const warmBlue = r > 175 && g > 135 && b < 200 && r > b + 8 && bright > 165 && b < 190;
+  return peach || warmBlue;
 }
 
 function almostSky(r: number, g: number, b: number) {

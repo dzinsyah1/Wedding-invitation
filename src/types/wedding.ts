@@ -97,6 +97,7 @@ export interface WorldLocation {
   enabled: boolean;
   x: number;
   width: number;
+  promptLift: number;
   interaction: {
     label: string;
     type: InteractionType;

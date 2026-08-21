@@ -18,7 +18,7 @@ export class Player extends Phaser.GameObjects.Container {
   private readonly CHAR_H = 118;
   facing = 1;
   velocity = 0;
-  private readonly maxSpeed = 188;
+  private readonly maxSpeed = 215;
   private readonly accel = 640;
   private readonly decel = 720;
   private readonly jumpSpeed = 430;

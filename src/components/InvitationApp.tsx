@@ -9,6 +9,7 @@ import LoadingScreen from "@/components/opening/LoadingScreen";
 import OpeningScreen from "@/components/opening/OpeningScreen";
 import MovementControls from "@/components/controls/MovementControls";
 import QuickNav from "@/components/navigation/QuickNav";
+import InteractionHint from "@/components/game/InteractionHint";
 import FallbackInvitation from "@/components/fallback/FallbackInvitation";
 import WelcomeModal from "@/components/wedding/WelcomeModal";
 import CoupleModal from "@/components/wedding/CoupleModal";
@@ -88,7 +89,7 @@ export default function InvitationApp() {
     gameEvents.emit(GAME_EVENTS.ENTER_WORLD);
     track("game_started");
     if (store.musicOn) gameEvents.emit(GAME_EVENTS.TOGGLE_MUSIC, true);
-    window.setTimeout(() => store.setInstructionVisible(false), 2800);
+    window.setTimeout(() => store.setInstructionVisible(false), 3600);
   }
 
   function toggleMusic() {
@@ -131,21 +132,19 @@ export default function InvitationApp() {
             onDir={(dir) => gameEvents.emit(GAME_EVENTS.MOVE, dir)}
             onJump={(down) => gameEvents.emit(GAME_EVENTS.JUMP, down)}
           />
-          {store.prompt && !store.modal ? (
-            <button
-              type="button"
-              className="absolute left-1/2 z-20 -translate-x-1/2 rounded-full border border-[var(--gold)]/55 bg-[var(--ivory)]/92 px-5 py-3 font-display text-[15px] tracking-wide text-[var(--ink)] shadow-[0_10px_30px_rgba(60,53,46,0.14)]"
-              style={{ bottom: "calc(96px + env(safe-area-inset-bottom))" }}
-              onClick={() => gameEvents.emit(GAME_EVENTS.INTERACT)}
-            >
-              ✦ {store.prompt.label}
-            </button>
-          ) : null}
           {store.instructionVisible ? (
-            <p className="pointer-events-none absolute top-[28%] left-1/2 z-20 -translate-x-1/2 rounded-full border border-[var(--gold)]/30 bg-[var(--ivory)]/80 px-5 py-2 font-display text-sm tracking-[0.14em] text-[var(--ink)]">
-              Explore our little story →
-            </p>
+            <div className="pointer-events-none absolute top-[18%] left-1/2 z-20 -translate-x-1/2">
+              <div className="hint-bubble rounded-[22px] px-6 py-3 text-center">
+                <p className="font-script text-[24px] leading-none text-[#4a3d32]">
+                  Jelajahi taman kami
+                </p>
+                <p className="mt-1.5 font-display text-[9px] tracking-[0.34em] text-[#c4a35a] uppercase">
+                  Ketuk tokoh & tempat
+                </p>
+              </div>
+            </div>
           ) : null}
+          <InteractionHint />
         </>
       ) : null}
 

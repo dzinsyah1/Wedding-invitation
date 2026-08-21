@@ -1,11 +1,14 @@
 import * as Phaser from "phaser";
 import type { WorldConfig } from "@/types/wedding";
 import { textureKey } from "@/game/world/env";
+import { DoveFlock } from "@/game/systems/doves";
 
 export class AmbientSystem {
   private birdTimer = 0;
-  private leafTimer = 0;
+  private petalBurstTimer = 0;
   private fireflies: Phaser.GameObjects.Arc[] = [];
+  private pathFairies: Phaser.GameObjects.Arc[] = [];
+  private doves: DoveFlock | null = null;
 
   constructor(
     private scene: Phaser.Scene,
@@ -15,21 +18,24 @@ export class AmbientSystem {
     if (reducedMotion) return;
     this.spawnButterflies();
     this.createPetals();
+    this.createPathFairyMotes();
+    this.doves = new DoveFlock(scene, world);
   }
 
   update(delta: number, playerX: number) {
     if (this.reducedMotion) return;
     this.birdTimer += delta;
-    this.leafTimer += delta;
-    if (this.birdTimer > 7000 + Math.random() * 4000) {
+    this.petalBurstTimer += delta;
+    if (this.birdTimer > 8000 + Math.random() * 5000) {
       this.spawnBird(playerX);
       this.birdTimer = 0;
     }
-    if (this.leafTimer > 5000) {
-      this.spawnLeaf(playerX);
-      this.leafTimer = 0;
+    if (this.petalBurstTimer > 2800) {
+      this.spawnPetalBurst(playerX);
+      this.petalBurstTimer = 0;
     }
     this.updateFireflies(playerX);
+    this.doves?.update(delta, playerX);
   }
 
   private spawnBird(playerX: number) {
@@ -54,18 +60,20 @@ export class AmbientSystem {
   private spawnButterflies() {
     const key = textureKey(this.scene, "pixar-butterfly");
     if (!this.scene.textures.exists(key)) return;
-    const spots = this.world.locations.filter((loc) => loc.id === "story" || loc.id === "couple" || loc.id === "home");
+    const spots = this.world.locations.filter(
+      (loc) => loc.id === "story" || loc.id === "couple" || loc.id === "home" || loc.id === "reception"
+    );
     spots.forEach((spot, s) => {
-      for (let i = 0; i < 2; i += 1) {
-        const bug = this.scene.add.image(spot.x - 20 + i * 28, this.world.groundY - 90, key);
-        bug.setDisplaySize(28, 28);
+      for (let i = 0; i < 3; i += 1) {
+        const bug = this.scene.add.image(spot.x - 24 + i * 22, this.world.groundY - 90, key);
+        bug.setDisplaySize(26, 26);
         bug.setDepth(12);
         this.scene.tweens.add({
           targets: bug,
-          x: spot.x + 36 + i * 18 + s * 8,
-          y: this.world.groundY - 128 - i * 10,
-          angle: { from: -20, to: 20 },
-          duration: 2000 + i * 350,
+          x: spot.x + 40 + i * 16 + s * 8,
+          y: this.world.groundY - 130 - i * 12,
+          angle: { from: -22, to: 22 },
+          duration: 1800 + i * 320,
           yoyo: true,
           repeat: -1,
           ease: "Sine.easeInOut",
@@ -76,44 +84,78 @@ export class AmbientSystem {
 
   private createPetals() {
     if (!this.scene.textures.exists("petal")) return;
-    const emitter = this.scene.add.particles(0, 40, "petal", {
+    const emitter = this.scene.add.particles(0, 20, "petal", {
       x: { min: 0, max: this.world.width },
-      lifespan: 9000,
-      speedY: { min: 16, max: 34 },
-      speedX: { min: -18, max: 8 },
-      scale: { start: 0.6, end: 0.2 },
+      lifespan: 10000,
+      speedY: { min: 12, max: 32 },
+      speedX: { min: -22, max: 10 },
+      scale: { start: 0.75, end: 0.2 },
       rotate: { min: 0, max: 360 },
-      frequency: 900,
+      frequency: 420,
       quantity: 1,
-      alpha: { start: 0.7, end: 0.1 },
+      alpha: { start: 0.85, end: 0.05 },
     });
     emitter.setDepth(15);
     emitter.setScrollFactor(0.85);
   }
 
-  private spawnLeaf(playerX: number) {
-    const leaf = this.scene.add.ellipse(playerX + Math.random() * 200 - 100, 40, 8, 4, 0x6f945c, 0.8);
-    leaf.setDepth(14);
-    this.scene.tweens.add({
-      targets: leaf,
-      y: this.world.groundY - 10,
-      x: leaf.x + 80,
-      angle: 180,
-      duration: 6000,
-      onComplete: () => leaf.destroy(),
-    });
+  private spawnPetalBurst(playerX: number) {
+    if (!this.scene.textures.exists("petal")) return;
+    for (let i = 0; i < 4; i += 1) {
+      const petal = this.scene.add.image(
+        playerX + Math.random() * 160 - 40,
+        30 + Math.random() * 40,
+        "petal"
+      );
+      petal.setDepth(14);
+      petal.setScale(0.7 + Math.random() * 0.5);
+      petal.setAlpha(0.9);
+      this.scene.tweens.add({
+        targets: petal,
+        y: this.world.groundY + 4,
+        x: petal.x + 40 + Math.random() * 80,
+        angle: 220,
+        alpha: 0.1,
+        duration: 4800 + Math.random() * 1200,
+        onComplete: () => petal.destroy(),
+      });
+    }
+  }
+
+  private createPathFairyMotes() {
+    for (let x = 200; x < this.world.width; x += 220) {
+      if (this.world.locations.some((loc) => Math.abs(loc.x - x) < 60)) continue;
+      const mote = this.scene.add.circle(
+        x,
+        this.world.groundY - 50 - Math.random() * 100,
+        1.8 + Math.random(),
+        0xfff2b8,
+        0.75
+      );
+      mote.setDepth(13);
+      this.pathFairies.push(mote);
+      this.scene.tweens.add({
+        targets: mote,
+        alpha: { from: 0.15, to: 0.95 },
+        y: mote.y - 12,
+        duration: 1600 + Math.random() * 1200,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.easeInOut",
+      });
+    }
   }
 
   private updateFireflies(playerX: number) {
     const finale = this.world.locations.find((loc) => loc.id === "thanks");
     if (!finale || Math.abs(playerX - finale.x) > 700) return;
     if (this.fireflies.length === 0) {
-      for (let i = 0; i < 8; i += 1) {
+      for (let i = 0; i < 12; i += 1) {
         const fly = this.scene.add.circle(
-          finale.x + Math.random() * 180 - 90,
-          this.world.groundY - 40 - Math.random() * 160,
-          2.4,
-          0xf6e3a1,
+          finale.x + Math.random() * 200 - 100,
+          this.world.groundY - 40 - Math.random() * 180,
+          2.2,
+          0xfff2b8,
           0.9
         );
         fly.setDepth(16);
@@ -121,8 +163,8 @@ export class AmbientSystem {
         this.scene.tweens.add({
           targets: fly,
           alpha: { from: 0.2, to: 1 },
-          y: fly.y - 16,
-          duration: 1400 + i * 120,
+          y: fly.y - 18,
+          duration: 1200 + i * 100,
           yoyo: true,
           repeat: -1,
         });

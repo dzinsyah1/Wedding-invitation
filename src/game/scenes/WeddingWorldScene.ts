@@ -26,6 +26,7 @@ export class WeddingWorldScene extends Phaser.Scene {
   private keyW?: Phaser.Input.Keyboard.Key;
   private keySpace?: Phaser.Input.Keyboard.Key;
   private jumpHeld = false;
+  private isMobile = false;
   private unsubs: Array<() => void> = [];
 
   constructor() {
@@ -36,13 +37,16 @@ export class WeddingWorldScene extends Phaser.Scene {
     const world = wedding.world;
     const reduced = Boolean(this.game.registry.get("reducedMotion"));
     const isMobile = Boolean(this.game.registry.get("isMobile"));
+    this.isMobile = isMobile;
 
     new WorldBuilder(this, world, reduced).build();
 
     this.player = new Player(this, world.playerStart.x, world.playerStart.y);
     this.player.setAlpha(0);
 
-    new CameraSystem(this, this.player, world.width, world.height, reduced);
+    this.input.enabled = false;
+
+    new CameraSystem(this, this.player, world.width, world.height, reduced, isMobile);
     this.interaction = new InteractionSystem(this, this.player, world.locations, isMobile);
     this.ambient = new AmbientSystem(this, world, reduced);
     this.lighting = new LightingSystem(this, this.player, world.width, world.height);
@@ -82,10 +86,26 @@ export class WeddingWorldScene extends Phaser.Scene {
         if (open) {
           this.inputDir = 0;
           this.jumpHeld = false;
+          this.input.enabled = false;
+        } else {
+          this.interaction.lock(700);
+          this.time.delayedCall(80, () => {
+            if (!this.modalOpen) this.input.enabled = true;
+          });
         }
       })
     );
 
+    this.input.on("pointerup", () => {
+      if (!this.isMobile) return;
+      this.inputDir = 0;
+      this.jumpHeld = false;
+    });
+    this.input.on("pointerupoutside", () => {
+      if (!this.isMobile) return;
+      this.inputDir = 0;
+      this.jumpHeld = false;
+    });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.cleanup());
     gameEvents.emit(GAME_EVENTS.LOAD_PROGRESS, { progress: 1 });
     gameEvents.emit(GAME_EVENTS.GAME_READY);
@@ -93,6 +113,7 @@ export class WeddingWorldScene extends Phaser.Scene {
 
   private enterWorld() {
     this.playing = true;
+    this.interaction.lock(700);
     this.tweens.add({
       targets: this.player,
       alpha: 1,
@@ -101,6 +122,9 @@ export class WeddingWorldScene extends Phaser.Scene {
     this.cameras.main.zoomTo(this.cameras.main.zoom * 1.04, 700);
     this.time.delayedCall(720, () => {
       this.cameras.main.zoomTo(this.cameras.main.zoom / 1.04, 900);
+    });
+    this.time.delayedCall(550, () => {
+      this.input.enabled = true;
     });
   }
 

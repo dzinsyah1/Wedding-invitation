@@ -32,6 +32,7 @@ export const GAME_EVENTS = {
   CLOSE_MODAL: "CLOSE_MODAL",
   SHOW_PROMPT: "SHOW_PROMPT",
   HIDE_PROMPT: "HIDE_PROMPT",
+  PROMPT_POS: "PROMPT_POS",
   NAVIGATE_TO: "NAVIGATE_TO",
   MOVE: "MOVE",
   JUMP: "JUMP",
@@ -62,4 +63,11 @@ export interface PromptPayload {
   label: string;
   locationId: string;
   desktop: string;
+  screenX?: number;
+  screenY?: number;
+}
+
+export interface PromptPosPayload {
+  x: number;
+  y: number;
 }

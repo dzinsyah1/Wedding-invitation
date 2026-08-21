@@ -38,22 +38,22 @@ Example:
 START
   │
   ▼
-🏡 HOME
+🏡 GARDEN GATE / WELCOME
   │
   ├── Couple
   │
   ▼
-🌸 GARDEN
+🌸 FLOWER GARDEN
   │
   ├── Our Story
   │
   ▼
-🕌 MOSQUE
+🕌 MOSQUE (garden path continues)
   │
   ├── Akad
   │
   ▼
-🏛️ WEDDING VENUE
+🏛️ FLORAL RECEPTION / GAZEBO
   │
   ├── Reception
   │
@@ -74,6 +74,9 @@ START
   │
   ▼
 🎁 GIFT
+  │
+  ▼
+🌅 FINAL ARCH / SUNSET
 ```
 
 The player can move:
@@ -256,12 +259,14 @@ Background should already be animated.
 
 Possible animations:
 
-* floating particles
-* moving clouds
-* flowers moving
-* subtle light rays
-* slowly moving leaves
-* gentle parallax
+* floating white petals
+* soft fairy-light twinkle
+* flowers / bushes gently swaying
+* subtle warm light rays / bloom
+* slowly drifting dust motes
+* gentle parallax on floral arches and path
+
+Opening background should already preview the Pixar Flower Garden world (path, white roses, golden haze).
 
 ---
 
@@ -269,9 +274,9 @@ Possible animations:
 
 When page loads:
 
-1. Background fades in.
-2. Clouds slowly move.
-3. Small particles appear.
+1. Garden background fades in (warm golden glow).
+2. Soft petals and light motes appear.
+3. Fairy lights gently twinkle.
 4. Couple names animate in.
 5. Date fades in.
 6. Enter button appears.
@@ -361,20 +366,19 @@ The actual world should contain multiple visual scenes.
 
 # 11. SCENE 01 — HOME / HERO
 
-The first area should contain a beautiful traditional/modern Indonesian house.
+The first area should feel like entering a romantic white flower garden wedding venue.
 
 Possible visual direction:
 
-* elegant Indonesian house
-* warm wooden elements
-* garden
-* flowers
-* hanging lamps
-* trees
-* small pathway
-* wedding decorations
+* stone garden path covered with fallen white petals
+* overflowing white rose bushes on both sides
+* warm lanterns along the path
+* fairy lights in the trees
+* floral archway ahead as a visual hero landmark
+* soft golden sunlight and gentle bloom
+* optional small garden gate / welcome sign (instead of a heavy house facade)
 
-The player starts near the house.
+The player starts on the garden path, facing toward the first floral arch.
 
 Interactive object:
 
@@ -460,21 +464,23 @@ Avoid generic Bootstrap-style modal.
 
 # 14. SCENE 03 — OUR STORY
 
-Use a large illustrated object:
+This scene is the heart of the flower garden zone.
 
-* book
-* photo album
-* tree
-* bench
-* signboard
+Use a large illustrated garden object:
+
+* floral arch with a story book / album beneath it
+* garden bench surrounded by white roses
+* photo album on a stone pedestal with flowers
+* signboard framed by blossoms
 
 Example:
 
 ```text
-             🌳
+          🌸 ARCH 🌸
          📖 OUR STORY
 
               🧍
+    (petals falling)
 ```
 
 Interaction:
@@ -527,12 +533,12 @@ Optional horizontal swipe between chapters.
 
 # 16. SCENE 04 — AKAD NIKAH
 
-Environment transitions into a more elegant Islamic setting.
+Environment transitions into a calm Islamic setting that still sits inside the flower garden journey.
 
 Example:
 
 ```text
-🌳         🕌         🌳
+🌸       🕌       🌸
              ✦
 
         AKAD NIKAH
@@ -543,11 +549,11 @@ Example:
 Visual elements:
 
 * mosque
-* Islamic architectural details
-* garden
+* soft Islamic architectural details
+* continuing white floral path
 * lanterns
-* flowers
-* subtle sunlight
+* restrained floral framing (not overpowering the mosque)
+* subtle golden sunlight
 
 Avoid excessive religious ornamentation.
 
@@ -586,21 +592,19 @@ Environment gradually changes into a wedding reception area.
 
 Possible environment:
 
-* wedding hall
-* decorated garden
-* gazebo
-* stage
-* flowers
-* hanging lights
-* tables
-* decorative arches
+* outdoor floral reception garden (preferred for this theme)
+* white rose gazebo
+* stage framed by floral arches
+* hanging fairy lights + lanterns
+* soft decorated tables with white florals
+* petal-covered path continuing from earlier scenes
 
 Example:
 
 ```text
       ✦       ✦       ✦
 
-          🏛️
+        🌸 GAZEBO 🌸
      WEDDING RECEPTION
 
              🧍
@@ -846,15 +850,15 @@ Copy buttons.
 
 # 27. FINAL SCENE
 
-At the end of the journey, create a beautiful final environment.
+At the end of the journey, create a beautiful final environment that peaks the flower garden theme.
 
-Possible:
+Preferred:
 
-* sunset
-* garden
-* mountain
-* wedding lights
-* couple silhouette
+* golden sunset through the farthest floral arch
+* denser fairy lights and warm lanterns
+* soft mountain / tree haze behind the garden
+* couple silhouette under a blooming arch
+* extra floating petals and firefly-like sparks
 
 Example:
 
@@ -884,13 +888,14 @@ Optional:
 
 Player should be visually attractive.
 
-Character style must match the selected world.
+Character style must match the selected world: Pixar-inspired 2D, soft rounded forms, warm lighting, elegant wedding-guest / couple-themed look.
 
 MVP:
 
 * one male/female neutral couple-themed character or configurable character
 * walking animation
 * idle animation
+* outfit/colors that harmonize with ivory–gold–sage garden palette
 
 Minimum animation states:
 
@@ -1340,52 +1345,70 @@ Avoid arcade sounds.
 
 Default theme:
 
-## Romantic Indonesian Cozy Illustration
+## Pixar Flower Garden Wedding
 
 Visual direction:
 
-* 2D illustrated
-* warm
-* detailed
-* charming
-* premium
-* romantic
-* slightly whimsical
+* 2D illustrated, Pixar-inspired (not photorealistic, not childish cartoon)
+* romantic white flower garden
+* warm golden sunlight / soft bloom
+* rounded, readable silhouettes
+* clean 3D-like volume in 2D art (soft shading, clear forms)
+* premium, charming, fairy-tale wedding atmosphere
+* slightly whimsical but elegant
+
+Core mood reference:
+
+> A dreamy white rose garden path with floral arches, stone steps, lanterns, and fairy lights — translated into a polished Pixar-style 2D side-scrolling wedding world.
 
 Avoid:
 
 * cheap clipart
 * generic stock illustration
-* childish cartoon
+* childish cartoon / babyish characters
+* photorealistic photo collage
 * excessive pixelation
 * dark RPG style
 * fantasy medieval style
+* cold neon / cyber look
 
 ---
 
 # 45. ART DIRECTION
 
-The world should feel like an illustrated wedding storybook.
+The world should feel like walking through a Pixar wedding flower garden storybook.
 
 Recommended visual qualities:
 
-* hand-painted appearance
-* clean silhouettes
-* rich environmental details
-* warm lighting
-* layered depth
-* subtle texture
-* elegant color palette
+* soft rounded shapes (flowers, bushes, arches, lanterns)
+* clean silhouettes readable at mobile size
+* rich floral density without visual noise
+* warm golden-hour lighting + gentle bloom
+* layered depth (path → arches → soft distant glow)
+* subtle painterly texture, not noisy grain
+* glowing fairy lights and warm lanterns
+* falling white petals and light dust motes
+
+Signature environment motifs:
+
+* white roses and cream blossoms overflowing both sides of the path
+* stone / pebble garden path with scattered petals
+* double floral archway (near arch + farther arch for depth)
+* vintage garden lanterns along the path
+* fairy lights draped in tree canopies
+* soft sunlit haze in the far background
+* delicate gold filigree accents in UI only (not cluttering the world)
 
 Suggested palette:
 
+* ivory / pure soft white (flowers)
 * cream
-* sage green
-* muted teal
-* warm brown
-* soft gold
-* ivory
-* dusty rose
+* warm gold / honey light
+* soft sage / fresh garden green
+* light olive foliage
+* warm stone gray-beige (path)
+* dusty blush (optional accent)
+* soft sky peach / pale gold haze
 
 Colors should be configurable by theme.
 
@@ -1768,25 +1791,25 @@ Example:
 Garden:
 
 ```text
-petals + butterflies
+white petals + soft light motes + butterflies
 ```
 
 Mosque:
 
 ```text
-soft light + subtle particles
+soft gold light + subtle floating petals
 ```
 
 Reception:
 
 ```text
-small sparkles + floating petals
+petals + fairy-light sparkles
 ```
 
 Final sunset:
 
 ```text
-warm particles + fireflies
+warm bloom particles + fireflies + denser petals
 ```
 
 ---
@@ -1809,7 +1832,7 @@ Example:
 Garden:
 
 ```text
-green + bright
+ivory + sage + bright golden light
 ```
 
 ↓
@@ -1817,7 +1840,7 @@ green + bright
 Mosque:
 
 ```text
-green + gold + ivory
+ivory + soft gold + calm green
 ```
 
 ↓
@@ -1825,7 +1848,7 @@ green + gold + ivory
 Reception:
 
 ```text
-warm + festive
+warm gold + white florals + festive sparkle
 ```
 
 ↓
@@ -1833,7 +1856,7 @@ warm + festive
 Final:
 
 ```text
-sunset + gold
+sunset peach + honey gold + denser bloom
 ```
 
 ---
@@ -1844,19 +1867,19 @@ Use at least 4 visual depth layers.
 
 ```text
 Layer 0
-Sky / Clouds
+Sky / golden haze / soft clouds
 
 Layer 1
-Mountains / Distant scenery
+Distant trees / soft garden glow / far floral arch
 
 Layer 2
-Trees / Buildings
+Near floral arches / lanterns / buildings / bushes
 
 Layer 3
-Ground / Player
+Garden path / player / interactive objects
 
 Layer 4
-Foreground grass / flowers
+Foreground roses / overhanging blossoms / petal spray
 ```
 
 The camera should move these layers at different speeds.
@@ -2273,50 +2296,74 @@ Theme must control:
 
 Example themes for future:
 
-### Theme 01
+### Theme 01 — MVP
 
-Cozy Indonesian Village
+Pixar Flower Garden Wedding
 
 ### Theme 02
 
-Islamic Garden
+Cozy Indonesian Village
 
 ### Theme 03
 
-Modern Romantic
+Islamic Garden
 
 ### Theme 04
 
-Nusantara
+Modern Romantic
 
 ### Theme 05
+
+Nusantara
+
+### Theme 06
 
 Elegant Sunset
 
 Do not implement all themes in MVP.
 
-Implement one polished theme.
+Implement one polished theme: Pixar Flower Garden Wedding.
 
 ---
 
 # 78. MVP DEFAULT THEME
 
-## "Cozy Indonesian Wedding"
+## "Pixar Flower Garden Wedding"
 
 Environment:
 
-* Indonesian house
-* lush garden
-* tropical trees
-* mountains in distance
-* mosque
-* wedding venue
-* flowers
-* warm sunlight
+* white rose / cream blossom garden path
+* stone steps and petal-covered walkway
+* double floral arches for depth
+* warm lanterns and fairy lights
+* soft golden sunlight and bloom haze
+* mosque integrated gently into the garden journey
+* floral gazebo / outdoor reception venue
+* distant soft trees and warm sky
 
 Visual style:
 
-> Premium illustrated 2D storybook with subtle game-like movement.
+> Premium Pixar-inspired 2D floral wedding world — rounded forms, warm glow, readable silhouettes, romantic and premium (never childish).
+
+Asset keywords for artists / generators:
+
+* pixar style 2D side view
+* romantic white flower garden
+* floral wedding arch
+* soft golden hour lighting
+* fairy lights and lanterns
+* clean shapes, soft shading
+* wedding invitation game environment
+
+Must remain consistent across:
+
+* opening screen
+* all world scenes
+* characters
+* interaction prompts
+* modals
+* particles
+* loading screen
 
 ---
 
@@ -2340,6 +2387,8 @@ Claude Code must NOT:
 * force autoplay music
 * make movement difficult
 * require a tutorial longer than a few seconds
+* mix photoreal garden photos with cartoon characters
+* make the floral theme look like a children's cartoon playground
 
 ---
 
@@ -2354,14 +2403,15 @@ The result should feel:
 * alive
 * smooth
 * memorable
+* like a Pixar wedding garden you can walk through
 
 The visual quality should be closer to:
 
-> an interactive illustrated storybook
+> an interactive Pixar-inspired floral wedding storybook
 
 than:
 
-> a basic pixel game.
+> a basic pixel game or a stock photo collage.
 
 ---
 

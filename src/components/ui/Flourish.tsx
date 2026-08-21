@@ -21,7 +21,12 @@ export default function Flourish({ className = "" }: { className?: string }) {
 
 export function CornerOrnaments() {
   const corner = (extra: string) => (
-    <svg viewBox="0 0 48 48" className={`absolute h-10 w-10 text-[var(--gold)] ${extra}`} fill="none">
+    <svg
+      viewBox="0 0 48 48"
+      className={`pointer-events-none absolute h-10 w-10 text-[var(--gold)] ${extra}`}
+      fill="none"
+      aria-hidden="true"
+    >
       <path d="M8 40c0-18 14-32 32-32" stroke="currentColor" strokeWidth="1.2" />
       <path d="M16 40c0-12 10-22 24-22" stroke="currentColor" strokeWidth="0.8" opacity="0.6" />
       <circle cx="40" cy="8" r="1.6" fill="currentColor" />

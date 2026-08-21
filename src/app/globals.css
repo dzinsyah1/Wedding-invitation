@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --cream: #fff6e8;
-  --sage: #7cbc6a;
-  --teal: #3e8ebe;
-  --brown: #6b4a32;
-  --gold: #f0c14a;
-  --ivory: #fffdf8;
-  --rose: #f2a3b2;
-  --ink: #1f3a5f;
+  --cream: #fff8ee;
+  --sage: #7cb86a;
+  --teal: #6a9e8a;
+  --brown: #6b5340;
+  --gold: #e8b84a;
+  --ivory: #fffef9;
+  --rose: #f2c4c8;
+  --ink: #3d4a3f;
   --paper: #fffaf1;
 }
 
@@ -47,15 +47,56 @@ canvas {
   font-family: var(--font-script), cursive;
 }
 
+.hint-bubble {
+  background:
+    radial-gradient(120px 40px at 50% 0%, rgba(255, 248, 232, 0.95), transparent 70%),
+    linear-gradient(180deg, #fffefb 0%, #fff6e8 100%);
+  border: 1px solid rgba(212, 175, 90, 0.55);
+  box-shadow:
+    0 10px 28px rgba(80, 58, 30, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.hint-bubble-tail {
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  width: 12px;
+  height: 12px;
+  translate: -50% 0;
+  rotate: 45deg;
+  background: linear-gradient(135deg, transparent 50%, #fff6e8 50%);
+  border-right: 1px solid rgba(212, 175, 90, 0.5);
+  border-bottom: 1px solid rgba(212, 175, 90, 0.5);
+}
+
+.control-btn {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  background:
+    radial-gradient(18px 12px at 50% 20%, rgba(255, 248, 232, 0.95), transparent 70%),
+    linear-gradient(180deg, #fffefb 0%, #fff4e4 100%);
+  border: 1px solid rgba(212, 175, 90, 0.55);
+  box-shadow:
+    0 8px 22px rgba(80, 58, 30, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.control-btn:active {
+  transform: translateY(1px) scale(0.97);
+}
+
 .paper-card {
   background:
-    radial-gradient(900px 280px at 50% 0%, rgba(194, 163, 106, 0.12), transparent 55%),
-    linear-gradient(180deg, #fffaf1 0%, #f4ede0 100%);
-  box-shadow: inset 0 0 0 1px rgba(194, 163, 106, 0.28);
+    radial-gradient(900px 280px at 50% 0%, rgba(232, 184, 74, 0.14), transparent 55%),
+    radial-gradient(600px 200px at 80% 100%, rgba(124, 184, 106, 0.08), transparent 50%),
+    linear-gradient(180deg, #fffef9 0%, #fff4e4 100%);
+  box-shadow: inset 0 0 0 1px rgba(200, 160, 80, 0.32);
 }
 
 .ornament {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='18' viewBox='0 0 120 18' fill='none'%3E%3Cpath d='M4 9h34M82 9h34' stroke='%23C4A35A' stroke-width='1'/%3E%3Ccircle cx='60' cy='9' r='3' fill='%23D4A5A5'/%3E%3Cpath d='M48 9h8M64 9h8' stroke='%238FA387'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='18' viewBox='0 0 120 18' fill='none'%3E%3Cpath d='M4 9h34M82 9h34' stroke='%23C4A35A' stroke-width='1'/%3E%3Ccircle cx='60' cy='9' r='3' fill='%23E8D8C0'/%3E%3Cpath d='M48 9h8M64 9h8' stroke='%238FA387'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
 }

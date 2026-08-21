@@ -27,6 +27,7 @@ export class LightingSystem {
 
   update() {
     const t = Phaser.Math.Clamp((this.player.x - this.worldWidth * 0.55) / (this.worldWidth * 0.4), 0, 1);
-    this.overlay.setFillStyle(0xe8a87c, 0.08 + t * 0.28);
+    // Soft honey-gold wash toward the finale arch
+    this.overlay.setFillStyle(0xf0c090, 0.04 + t * 0.22);
   }
 }

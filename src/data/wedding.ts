@@ -10,7 +10,7 @@ export const wedding: WeddingData = {
     bride: "Aisyah",
   },
   dateDisplay: "20.09.2026",
-  tagline: "Our Little Journey",
+  tagline: "Walk Through Our Garden",
   welcome: {
     bismillah: "Bismillahirrahmanirrahim",
     greeting: "Assalamu'alaikum Warahmatullahi Wabarakatuh",

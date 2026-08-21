@@ -25,6 +25,10 @@ export function createWeddingGame(options: CreateGameOptions) {
       roundPixels: false,
       pixelArt: false,
     },
+    input: {
+      windowEvents: false,
+      keyboard: true,
+    },
     audio: { noAudio: true },
     scene: [BootScene, PreloadScene, WeddingWorldScene],
     banner: false,

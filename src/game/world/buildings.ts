@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import { blob, gfx, round } from "@/game/world/paint";
+import { gfx, round } from "@/game/world/paint";
 import { palette } from "@/data/theme";
 
 export function makeSign(scene: Phaser.Scene, text: string, x: number, y: number) {
@@ -13,23 +13,12 @@ export function makeSign(scene: Phaser.Scene, text: string, x: number, y: number
   const label = scene.add.text(0, 0, text, {
     fontFamily: "Nunito, sans-serif",
     fontSize: "15px",
-    color: "#2b4a6f",
+    color: "#3d4a3f",
     fontStyle: "bold",
   });
   label.setOrigin(0.5);
   wrap.add(label);
   return wrap;
-}
-
-function plantSkirt(scene: Phaser.Scene, width: number, front: boolean) {
-  const g = gfx(scene);
-  const y = front ? 16 : 11;
-  const w = width;
-  blob(g, 0, y, w * (front ? 0.72 : 0.95), front ? 18 : 28, palette.grass, front ? 0.92 : 0.96);
-  blob(g, -w * 0.22, y + 2, w * 0.42, 16, palette.grassDark, 0.78);
-  blob(g, w * 0.2, y + 1, w * 0.38, 15, palette.grassLight, 0.7);
-  blob(g, -w * 0.08, y + 3, 36, 12, palette.hillFront, 0.55);
-  return g;
 }
 
 export function placeProp(
@@ -51,17 +40,14 @@ export function placeProp(
     return wrap;
   }
 
-  const img = scene.add.image(0, 0, textureKey);
+  const img = scene.add.image(0, 6, textureKey);
   img.setOrigin(0.5, 1);
   const displayW = (img.width / img.height) * height;
   img.setDisplaySize(displayW, height);
-  img.y = 18;
 
-  const shadow = scene.add.ellipse(0, 12, displayW * 0.62, 20, palette.shadow, 0.22);
+  const shadow = scene.add.ellipse(0, 10, displayW * 0.4, 12, palette.shadow, 0.16);
   wrap.add(shadow);
-  wrap.add(plantSkirt(scene, displayW, false));
   wrap.add(img);
-  wrap.add(plantSkirt(scene, displayW * 0.82, true));
 
   if (sign) {
     wrap.add(makeSign(scene, sign, 0, -height + signLift + 10));
@@ -95,12 +81,6 @@ export function placeLandmark(
   wrap.add(shadow);
   wrap.add(img);
 
-  const skirt = gfx(scene);
-  blob(skirt, 0, 12, displayW * 0.48, 14, palette.grass, 0.7);
-  blob(skirt, -displayW * 0.14, 13, 38, 11, palette.grassDark, 0.45);
-  blob(skirt, displayW * 0.12, 13, 34, 10, palette.grassLight, 0.42);
-  wrap.add(skirt);
-
   if (sign) {
     wrap.add(makeSign(scene, sign, 0, -height + signLift + 8));
   }
@@ -118,7 +98,7 @@ export function createTree(
 }
 
 export const createHouse = (s: Phaser.Scene, x: number, y: number) =>
-  placeLandmark(s, "pixar-house", x, y, 300, "Welcome Home");
+  placeLandmark(s, "pixar-house", x, y, 268);
 
 function animateCouple(scene: Phaser.Scene, img: Phaser.GameObjects.Image) {
   if (scene.game.registry.get("reducedMotion")) return;
@@ -189,7 +169,7 @@ function animateCouple(scene: Phaser.Scene, img: Phaser.GameObjects.Image) {
 }
 
 export function createCouple(s: Phaser.Scene, x: number, y: number) {
-  const wrap = placeLandmark(s, "pixar-couple", x, y, 280, "Meet The Couple", 22);
+  const wrap = placeLandmark(s, "pixar-couple", x, y, 240);
   const img = wrap.list.find((child) => child instanceof Phaser.GameObjects.Image) as
     | Phaser.GameObjects.Image
     | undefined;
@@ -197,18 +177,18 @@ export function createCouple(s: Phaser.Scene, x: number, y: number) {
   return wrap;
 }
 export const createStoryGarden = (s: Phaser.Scene, x: number, y: number) =>
-  placeProp(s, "pixar-story", x, y, 320, "Our Story");
+  placeLandmark(s, "pixar-story", x, y, 250);
 export const createMosque = (s: Phaser.Scene, x: number, y: number) =>
-  placeLandmark(s, "pixar-mosque", x, y, 340, "Akad Nikah", 14);
+  placeLandmark(s, "pixar-mosque", x, y, 300);
 export const createVenue = (s: Phaser.Scene, x: number, y: number) =>
-  placeLandmark(s, "pixar-venue", x, y, 280, "Wedding Reception", 16);
+  placeLandmark(s, "pixar-venue", x, y, 270);
 export const createClockTower = (s: Phaser.Scene, x: number, y: number) =>
-  placeProp(s, "pixar-clock", x, y, 360, "The Big Day");
+  placeProp(s, "pixar-clock", x, y, 250);
 export const createGalleryWall = (s: Phaser.Scene, x: number, y: number) =>
-  placeProp(s, "pixar-gallery", x, y, 250, "Our Memories");
+  placeProp(s, "pixar-gallery", x, y, 220);
 export const createMailbox = (s: Phaser.Scene, x: number, y: number) =>
-  placeProp(s, "pixar-mailbox", x, y, 230, "RSVP Here");
+  placeProp(s, "pixar-mailbox", x, y, 200);
 export const createGift = (s: Phaser.Scene, x: number, y: number) =>
-  placeProp(s, "pixar-gift", x, y, 220, "Wedding Gift");
+  placeProp(s, "pixar-gift", x, y, 150);
 export const createFinale = (s: Phaser.Scene, x: number, y: number) =>
-  placeProp(s, "pixar-finale", x, y, 380);
+  placeProp(s, "pixar-finale", x, y, 320);
