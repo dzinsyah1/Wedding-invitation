@@ -21,12 +21,12 @@ const script = Great_Vibes({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://rizky-aisyah.wedding"),
-  title: "Rizky & Aisyah — Wedding Invitation",
+  metadataBase: new URL("https://dzin-titin.wedding"),
+  title: "Dzin Syah & Titin — Wedding Invitation",
   description:
     "Dengan penuh kebahagiaan, kami mengundang Anda untuk menjadi bagian dari hari istimewa kami.",
   openGraph: {
-    title: "Rizky & Aisyah — Wedding Invitation",
+    title: "Dzin Syah & Titin — Wedding Invitation",
     description:
       "Dengan penuh kebahagiaan, kami mengundang Anda untuk menjadi bagian dari hari istimewa kami.",
     images: ["/images/og-image.png"],

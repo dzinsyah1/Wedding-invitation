@@ -14,7 +14,7 @@ export function downloadIcs(options: {
   const ics = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Rizky Aisyah Wedding//ID",
+    "PRODID:-//Dzin Titin Wedding//ID",
     "CALSCALE:GREGORIAN",
     "BEGIN:VEVENT",
     `DTSTAMP:${stamp(new Date())}`,

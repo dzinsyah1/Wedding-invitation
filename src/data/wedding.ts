@@ -3,11 +3,11 @@ import { theme } from "@/data/theme";
 import { world } from "@/data/world";
 
 export const wedding: WeddingData = {
-  slug: "rizky-aisyah",
+  slug: "dzin-titin",
   names: {
-    display: "Rizky & Aisyah",
-    groom: "Rizky",
-    bride: "Aisyah",
+    display: "Dzin Syah & Titin",
+    groom: "Dzin Syah",
+    bride: "Titin",
   },
   dateDisplay: "20.09.2026",
   tagline: "Walk Through Our Garden",
@@ -20,15 +20,15 @@ export const wedding: WeddingData = {
   },
   couple: {
     groom: {
-      fullName: "Rizky Pratama",
-      nickname: "Rizky",
+      fullName: "Mugh Dzin Syah",
+      nickname: "Dzin Syah",
       photo: "/images/groom-portrait.png",
       parents: "Putra dari Bapak Ahmad Pratama & Ibu Siti Aminah",
       title: "The Groom",
     },
     bride: {
-      fullName: "Aisyah Putri Hasan",
-      nickname: "Aisyah",
+      fullName: "Mirrotin Nuriyyah",
+      nickname: "Titin",
       photo: "/images/bride-portrait.png",
       parents: "Putri dari Bapak Hasan Abdullah & Ibu Fatimah Zahra",
       title: "The Bride",
@@ -127,19 +127,19 @@ export const wedding: WeddingData = {
       {
         bank: "BCA",
         number: "1234567890",
-        holder: "Rizky Pratama",
+        holder: "Mugh Dzin Syah",
       },
       {
         bank: "Mandiri",
         number: "9876543210",
-        holder: "Aisyah Putri Hasan",
+        holder: "Mirrotin Nuriyyah",
       },
     ],
     ewallets: [
       {
         name: "Dana",
         number: "081234567890",
-        holder: "Rizky Pratama",
+        holder: "Mugh Dzin Syah",
       },
     ],
     address: "Jl. Melati Indah No. 12, Jakarta Selatan, 12560",
