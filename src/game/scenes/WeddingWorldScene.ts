@@ -8,7 +8,7 @@ import { InteractionSystem } from "@/game/systems/InteractionSystem";
 import { AmbientSystem } from "@/game/systems/AmbientSystem";
 import { LightingSystem } from "@/game/systems/LightingSystem";
 import { AudioSystem } from "@/game/systems/AudioSystem";
-import { qualitySettings, type QualitySettings } from "@/game/quality";
+import { qualitySettings, type DeviceClass, type QualitySettings } from "@/game/quality";
 
 export class WeddingWorldScene extends Phaser.Scene {
   private player!: Player;
@@ -38,6 +38,7 @@ export class WeddingWorldScene extends Phaser.Scene {
     const world = wedding.world;
     const reduced = Boolean(this.game.registry.get("reducedMotion"));
     const isMobile = Boolean(this.game.registry.get("isMobile"));
+    const device = (this.game.registry.get("device") as DeviceClass) || (isMobile ? "phone" : "desktop");
     const settings =
       (this.game.registry.get("quality") as QualitySettings) ?? qualitySettings("medium");
     this.isMobile = isMobile;
@@ -49,7 +50,7 @@ export class WeddingWorldScene extends Phaser.Scene {
 
     this.input.enabled = false;
 
-    new CameraSystem(this, this.player, world.width, world.height, reduced, isMobile);
+    new CameraSystem(this, this.player, world.width, world.height, reduced, device);
     this.interaction = new InteractionSystem(this, this.player, world.locations, isMobile);
     this.ambient = new AmbientSystem(this, world, reduced);
     this.lighting = settings.lighting

@@ -246,7 +246,7 @@ async function main() {
       continue;
     }
     const dest = path.join(pixarOut, asset.file);
-    await bakeSprite(src, dest, { mode: asset.mode, kind: asset.kind, maxSize: 512 });
+    await bakeSprite(src, dest, { mode: asset.mode, kind: asset.kind, maxSize: 768 });
     console.log("cut", asset.file);
   }
 
@@ -260,7 +260,7 @@ async function main() {
       console.warn("skip missing", file);
       continue;
     }
-    await bakeSprite(src, path.join(playerOut, file), { mode: "blue", kind: "cyan", maxSize: 256 });
+    await bakeSprite(src, path.join(playerOut, file), { mode: "blue", kind: "cyan", maxSize: 512 });
     console.log("cut", file);
   }
 

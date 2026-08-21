@@ -2,12 +2,13 @@ import * as Phaser from "phaser";
 import { BootScene } from "@/game/scenes/BootScene";
 import { PreloadScene } from "@/game/scenes/PreloadScene";
 import { WeddingWorldScene } from "@/game/scenes/WeddingWorldScene";
-import { detectQuality, qualitySettings, type QualityTier } from "@/game/quality";
+import { detectQuality, qualitySettings, type DeviceClass, type QualityTier } from "@/game/quality";
 
 export interface CreateGameOptions {
   parent: HTMLElement;
   reducedMotion: boolean;
   isMobile: boolean;
+  device: DeviceClass;
   quality?: QualityTier;
 }
 
@@ -30,13 +31,15 @@ export function createWeddingGame(options: CreateGameOptions) {
       width,
       height,
       autoCenter: Phaser.Scale.CENTER_BOTH,
-      autoRound: true,
+      autoRound: false,
     },
     render: {
-      antialias: settings.antialias,
-      roundPixels: settings.tier !== "high",
+      antialias: true,
+      antialiasGL: true,
+      roundPixels: false,
       pixelArt: false,
-      powerPreference: settings.tier === "high" ? "high-performance" : "low-power",
+      mipmapFilter: "LINEAR",
+      powerPreference: settings.tier === "low" ? "low-power" : "high-performance",
     },
     input: {
       windowEvents: false,
@@ -56,6 +59,7 @@ export function createWeddingGame(options: CreateGameOptions) {
 
   game.registry.set("reducedMotion", options.reducedMotion);
   game.registry.set("isMobile", options.isMobile);
+  game.registry.set("device", options.device);
   game.registry.set("qualityTier", tier);
   game.registry.set("quality", settings);
   return game;

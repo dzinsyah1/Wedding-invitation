@@ -58,6 +58,22 @@ export const PLAYER_FRAMES = [
   { raw: "raw-player-jump", dest: "player-jump", file: "player-jump.png" },
 ] as const;
 
+export type DeviceClass = "phone" | "tablet" | "desktop";
+
+export function detectDevice(): DeviceClass {
+  if (typeof window === "undefined") return "desktop";
+  const ua = navigator.userAgent;
+  const ipad =
+    /iPad/.test(ua) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const minSide = Math.min(window.innerWidth, window.innerHeight);
+  const maxSide = Math.max(window.innerWidth, window.innerHeight);
+  const coarse = window.matchMedia("(pointer: coarse)").matches;
+  if (ipad || (coarse && minSide >= 600 && maxSide >= 900)) return "tablet";
+  if (coarse || window.innerWidth < 768 || /Android|iPhone|iPod/i.test(ua)) return "phone";
+  return "desktop";
+}
+
 export function detectQuality(reducedMotion = false): QualityTier {
   if (typeof window === "undefined") return "medium";
   if (reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -72,18 +88,12 @@ export function detectQuality(reducedMotion = false): QualityTier {
   if (connection?.saveData) return "low";
   if (connection?.effectiveType === "2g" || connection?.effectiveType === "slow-2g") return "low";
 
-  const mobile =
-    window.matchMedia("(pointer: coarse)").matches ||
-    window.innerWidth < 768 ||
-    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const device = detectDevice();
   const memory = nav.deviceMemory;
-  const cores = navigator.hardwareConcurrency || 4;
 
+  if (device === "tablet") return memory !== undefined && memory <= 2 ? "medium" : "high";
   if (memory !== undefined && memory <= 2) return "low";
-  if (mobile && window.innerWidth < 380) return "low";
-  if (mobile && memory !== undefined && memory <= 4) return "low";
-  if (mobile && cores <= 4) return "low";
-  if (mobile) return "medium";
+  if (device === "phone") return "medium";
   if (memory !== undefined && memory <= 4) return "medium";
   return "high";
 }
@@ -91,9 +101,9 @@ export function detectQuality(reducedMotion = false): QualityTier {
 export function qualitySettings(tier: QualityTier) {
   return {
     tier,
-    fps: tier === "high" ? 60 : 30,
-    antialias: tier === "high",
-    canvasRenderer: tier === "low",
+    fps: tier === "low" ? 30 : 60,
+    antialias: true,
+    canvasRenderer: false,
     overlap: tier === "low" ? 0.12 : tier === "medium" ? 0.2 : 0.28,
     scatterMul: tier === "low" ? 1.85 : tier === "medium" ? 1.35 : 1,
     sway: tier === "high",
@@ -117,9 +127,9 @@ export function qualitySettings(tier: QualityTier) {
 export type QualitySettings = ReturnType<typeof qualitySettings>;
 
 export function cutAssetUrl(file: string) {
-  return `/images/pixar/cut/${file}?v=opt2`;
+  return `/images/pixar/cut/${file}?v=opt3`;
 }
 
 export function cutPlayerUrl(file: string) {
-  return `/images/cut/${file}?v=opt2`;
+  return `/images/cut/${file}?v=opt3`;
 }
