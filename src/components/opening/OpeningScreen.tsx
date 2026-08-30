@@ -65,6 +65,7 @@ export default function OpeningScreen({
         </p>
         <button
           type="button"
+          data-testid="enter-garden"
           onPointerDown={(event) => event.stopPropagation()}
           onClick={(event) => {
             event.stopPropagation();

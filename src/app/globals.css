@@ -131,6 +131,16 @@ canvas {
   }
 }
 
+@keyframes charBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
 .animate-floaty {
   animation: floaty 5s ease-in-out infinite;
 }
@@ -143,10 +153,87 @@ canvas {
   animation: fadeUp 0.7s ease both;
 }
 
+.char-bob {
+  animation: charBob 2.4s ease-in-out infinite;
+}
+
+.char-spotlight {
+  background: radial-gradient(circle, rgba(255, 236, 180, 0.7) 0%, rgba(232, 184, 74, 0) 72%);
+  filter: blur(8px);
+  transition: opacity 0.3s ease;
+}
+
+.char-pedestal {
+  width: 120px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(40, 28, 16, 0.42) 0%, rgba(40, 28, 16, 0) 74%);
+}
+
+.char-pedestal-on {
+  width: 148px;
+  background: radial-gradient(ellipse, rgba(232, 184, 74, 0.7) 0%, rgba(232, 184, 74, 0) 74%);
+}
+
+.char-ring {
+  pointer-events: none;
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  width: 150px;
+  height: 44px;
+  translate: -50% 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  opacity: 0;
+  transition: opacity 0.25s ease, border-color 0.25s ease;
+}
+
+.char-ring-on {
+  opacity: 1;
+  border-color: rgba(232, 184, 74, 0.95);
+  box-shadow: 0 0 18px rgba(232, 184, 74, 0.45);
+}
+
+.char-plate {
+  position: relative;
+  min-width: 132px;
+  border-radius: 18px;
+  padding: 10px 14px 12px;
+  background:
+    radial-gradient(80px 30px at 50% 0%, rgba(232, 184, 74, 0.16), transparent 70%),
+    linear-gradient(180deg, #fffefb 0%, #fff4e4 100%);
+  box-shadow:
+    0 10px 24px rgba(40, 28, 16, 0.18),
+    inset 0 0 0 1px rgba(200, 160, 80, 0.38);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.char-plate-on {
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 28px rgba(40, 28, 16, 0.22),
+    inset 0 0 0 1.5px rgba(232, 184, 74, 0.9);
+}
+
+.char-ready {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  translate: -50% 0;
+  border-radius: 999px;
+  background: var(--gold);
+  padding: 2px 8px;
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  color: var(--ink);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-floaty,
   .animate-drift,
-  .animate-fade-up {
+  .animate-fade-up,
+  .char-bob {
     animation: none;
   }
 }

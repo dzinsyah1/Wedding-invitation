@@ -39,7 +39,16 @@ const ASSETS = [
   { file: "pixar-dove-idle.png", mode: "blue", kind: "cutout" },
 ];
 
-const PLAYERS = ["player-idle.png", "player-walk-a.png", "player-walk-b.png", "player-jump.png"];
+const PLAYERS = [
+  "player-idle.png",
+  "player-walk-a.png",
+  "player-walk-b.png",
+  "player-jump.png",
+  "player-female-idle.png",
+  "player-female-walk-a.png",
+  "player-female-walk-b.png",
+  "player-female-jump.png",
+];
 
 const PHOTOS = [
   { src: "groom-portrait.png", dest: "groom-portrait.jpg", size: 900, quality: 78 },

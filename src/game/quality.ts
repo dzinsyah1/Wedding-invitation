@@ -1,4 +1,5 @@
 import type { ChromaKind } from "@/game/world/chroma";
+import { PLAYER_CHARACTER_LIST } from "@/game/player/characters";
 
 export type QualityTier = "high" | "medium" | "low";
 
@@ -51,12 +52,13 @@ export const CHROMA_ASSETS: ChromaAsset[] = [
   { key: "dove-idle", file: "pixar-dove-idle.png", mode: "blue", kind: "cutout", minTier: "high" },
 ];
 
-export const PLAYER_FRAMES = [
-  { raw: "raw-player-idle", dest: "player-idle", file: "player-idle.png" },
-  { raw: "raw-player-walk-a", dest: "player-walk-a", file: "player-walk-a.png" },
-  { raw: "raw-player-walk-b", dest: "player-walk-b", file: "player-walk-b.png" },
-  { raw: "raw-player-jump", dest: "player-jump", file: "player-jump.png" },
-] as const;
+export const PLAYER_FRAMES = PLAYER_CHARACTER_LIST.flatMap((character) =>
+  character.frames.map((frame) => ({
+    raw: `raw-${frame.dest}`,
+    dest: frame.dest,
+    file: frame.file,
+  }))
+);
 
 export type DeviceClass = "phone" | "tablet" | "desktop";
 
@@ -131,5 +133,5 @@ export function cutAssetUrl(file: string) {
 }
 
 export function cutPlayerUrl(file: string) {
-  return `/images/cut/${file}?v=opt3`;
+  return `/images/cut/${file}?v=char4`;
 }

@@ -5,8 +5,10 @@ import { useEffect, useState } from "react";
 import { GAME_EVENTS, gameEvents, type OpenModalPayload, type PromptPayload } from "@/game/events/gameEvents";
 import { useInvitationStore } from "@/store/invitationStore";
 import { track } from "@/lib/analytics";
+import type { PlayerCharacterId } from "@/game/player/characters";
 import LoadingScreen from "@/components/opening/LoadingScreen";
 import OpeningScreen from "@/components/opening/OpeningScreen";
+import CharacterSelectScreen from "@/components/opening/CharacterSelectScreen";
 import MovementControls from "@/components/controls/MovementControls";
 import QuickNav from "@/components/navigation/QuickNav";
 import InteractionHint from "@/components/game/InteractionHint";
@@ -77,11 +79,16 @@ export default function InvitationApp() {
     gameEvents.emit(GAME_EVENTS.MODAL_STATE, false);
   }
 
-  function enterWorld() {
+  function openCharacterSelect() {
+    store.setPhase("select");
+  }
+
+  function enterWorld(character: PlayerCharacterId) {
+    store.setSelectedCharacter(character);
     store.setPhase("playing");
     store.setInstructionVisible(true);
-    gameEvents.emit(GAME_EVENTS.ENTER_WORLD);
-    track("game_started");
+    gameEvents.emit(GAME_EVENTS.ENTER_WORLD, { character });
+    track("game_started", { character });
     if (store.musicOn) gameEvents.emit(GAME_EVENTS.TOGGLE_MUSIC, true);
     window.setTimeout(() => store.setInstructionVisible(false), 3600);
   }
@@ -109,7 +116,17 @@ export default function InvitationApp() {
           guestName={store.guestName}
           musicOn={store.musicOn}
           onToggleMusic={toggleMusic}
-          onEnter={enterWorld}
+          onEnter={openCharacterSelect}
+        />
+      ) : null}
+
+      {store.phase === "select" ? (
+        <CharacterSelectScreen
+          reducedMotion={store.reducedMotion}
+          musicOn={store.musicOn}
+          onToggleMusic={toggleMusic}
+          onBack={() => store.setPhase("opening")}
+          onConfirm={enterWorld}
         />
       ) : null}
 

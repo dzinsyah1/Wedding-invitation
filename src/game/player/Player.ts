@@ -1,5 +1,10 @@
 import * as Phaser from "phaser";
 import { palette } from "@/data/theme";
+import {
+  PLAYER_CHARACTERS,
+  type PlayerCharacter,
+  type PlayerCharacterId,
+} from "@/game/player/characters";
 
 type AnimState = "idle" | "run" | "jump";
 
@@ -14,8 +19,9 @@ export class Player extends Phaser.GameObjects.Container {
   private vy = 0;
   private onGround = true;
   private jumpHeld = false;
-  private readonly baseH: number;
+  private baseH: number;
   private readonly CHAR_H = 118;
+  private character: PlayerCharacter = PLAYER_CHARACTERS.male;
   facing = 1;
   velocity = 0;
   private readonly maxSpeed = 215;
@@ -25,18 +31,17 @@ export class Player extends Phaser.GameObjects.Container {
   private readonly gravity = 1480;
   interacting = false;
 
-  private readonly WALK_FRAMES = ["player-walk-a", "player-walk-b"];
-
-  constructor(scene: Phaser.Scene, x: number, y: number) {
+  constructor(scene: Phaser.Scene, x: number, y: number, characterId: PlayerCharacterId = "male") {
     super(scene, x, y);
     scene.add.existing(this);
     this.setDepth(20);
     this.groundY = y;
+    this.character = PLAYER_CHARACTERS[characterId];
 
     this.shadow = scene.add.ellipse(0, 4, 48, 12, palette.shadow, 0.28);
     this.add(this.shadow);
 
-    this.sprite = scene.add.image(0, 2, "player-idle");
+    this.sprite = scene.add.image(0, 2, this.character.idle);
     this.sprite.setOrigin(0.5, 1);
     const src = this.sprite.texture.getSourceImage() as HTMLImageElement;
     this.baseH = src.height || 1024;
@@ -44,6 +49,17 @@ export class Player extends Phaser.GameObjects.Container {
     this.add(this.sprite);
 
     this.setSize(52, 120);
+  }
+
+  setCharacter(id: PlayerCharacterId) {
+    this.character = PLAYER_CHARACTERS[id];
+    this.walkFrame = 0;
+    this.walkTimer = 0;
+    this.sprite.setTexture(this.character.idle);
+    this.sprite.setFlipX(this.facing < 0);
+    const src = this.sprite.texture.getSourceImage() as HTMLImageElement;
+    this.baseH = src.height || 1024;
+    this.fitSprite();
   }
 
   private fitSprite() {
@@ -139,17 +155,17 @@ export class Player extends Phaser.GameObjects.Container {
       const frameInterval = Phaser.Math.Linear(0.28, 0.18, speed);
       if (this.walkTimer >= frameInterval) {
         this.walkTimer -= frameInterval;
-        this.walkFrame = (this.walkFrame + 1) % this.WALK_FRAMES.length;
+        this.walkFrame = (this.walkFrame + 1) % this.character.walk.length;
       }
-      this.show(this.WALK_FRAMES[this.walkFrame]);
+      this.show(this.character.walk[this.walkFrame]);
       this.sprite.y = 2 + Math.sin(this.idleTime * Phaser.Math.PI2 * 4) * 1.5;
       this.shadow.setScale(1, 1);
     } else if (this.animState === "jump") {
-      this.show("player-jump");
+      this.show(this.character.jump);
       this.sprite.y = 2;
       this.shadow.setScale(0.7, 0.82);
     } else {
-      this.show("player-idle");
+      this.show(this.character.idle);
       this.idleTime += dt;
       this.sprite.y = 2 + Math.sin(this.idleTime * 1.5) * 1.4;
       this.shadow.setScale(1, 1);

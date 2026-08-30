@@ -2,6 +2,7 @@ import * as Phaser from "phaser";
 import { wedding } from "@/data/wedding";
 import { GAME_EVENTS, gameEvents } from "@/game/events/gameEvents";
 import { Player } from "@/game/player/Player";
+import { isPlayerCharacterId } from "@/game/player/characters";
 import { WorldBuilder } from "@/game/world/WorldBuilder";
 import { CameraSystem } from "@/game/systems/CameraSystem";
 import { InteractionSystem } from "@/game/systems/InteractionSystem";
@@ -67,7 +68,11 @@ export class WeddingWorldScene extends Phaser.Scene {
     }
 
     this.unsubs.push(
-      gameEvents.on(GAME_EVENTS.ENTER_WORLD, () => this.enterWorld()),
+      gameEvents.on(GAME_EVENTS.ENTER_WORLD, (payload) => {
+        const character = (payload as { character?: unknown } | undefined)?.character;
+        this.player.setCharacter(isPlayerCharacterId(character) ? character : "male");
+        this.enterWorld();
+      }),
       gameEvents.on(GAME_EVENTS.MOVE, (dir) => {
         this.inputDir = typeof dir === "number" ? dir : 0;
       }),

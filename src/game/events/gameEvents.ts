@@ -28,6 +28,7 @@ export const GAME_EVENTS = {
   GAME_READY: "GAME_READY",
   GAME_ERROR: "GAME_ERROR",
   ENTER_WORLD: "ENTER_WORLD",
+  SELECT_CHARACTER: "SELECT_CHARACTER",
   OPEN_MODAL: "OPEN_MODAL",
   CLOSE_MODAL: "CLOSE_MODAL",
   SHOW_PROMPT: "SHOW_PROMPT",
@@ -70,4 +71,8 @@ export interface PromptPayload {
 export interface PromptPosPayload {
   x: number;
   y: number;
+}
+
+export interface EnterWorldPayload {
+  character?: "male" | "female";
 }
