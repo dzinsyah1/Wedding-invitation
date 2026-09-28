@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Great_Vibes, Nunito } from "next/font/google";
+import { Amiri, Cormorant_Garamond, Great_Vibes, Nunito } from "next/font/google";
 import "./globals.css";
 
 const display = Cormorant_Garamond({
@@ -18,6 +18,13 @@ const script = Great_Vibes({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-script",
+});
+
+const arabic = Amiri({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  variable: "--font-arabic",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -45,7 +52,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id">
-      <body className={`${display.variable} ${body.variable} ${script.variable} antialiased`}>
+      <body className={`${display.variable} ${body.variable} ${script.variable} ${arabic.variable} antialiased`}>
         {children}
       </body>
     </html>

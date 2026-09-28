@@ -10,12 +10,14 @@ import {
 import { cutPlayerUrl } from "@/game/quality";
 
 export default function CharacterSelectScreen({
+  guestName = "",
   reducedMotion,
   musicOn,
   onToggleMusic,
   onBack,
   onConfirm,
 }: {
+  guestName?: string;
   reducedMotion: boolean;
   musicOn: boolean;
   onToggleMusic: () => void;
@@ -55,12 +57,26 @@ export default function CharacterSelectScreen({
 
       <div className="relative z-10 flex min-h-full flex-col items-center justify-between px-4 py-[max(16px,env(safe-area-inset-top))] pb-[max(16px,env(safe-area-inset-bottom))]">
         <header className="animate-fade-up mt-2 text-center">
-          <div className="hint-bubble inline-flex flex-col items-center rounded-[22px] px-6 py-3">
-            <p className="text-[10px] tracking-[0.42em] text-[var(--gold)]">CHARACTER SELECT</p>
-            <h1 className="font-display mt-1 text-[32px] leading-none text-[var(--ink)] sm:text-[40px]">
-              Pilih Tamu
-            </h1>
-            <p className="font-script mt-1 text-[22px] text-[var(--rose)]">Siapa yang menjelajahi taman?</p>
+          <div className="hint-bubble inline-flex max-w-[92vw] flex-col items-center rounded-[22px] px-6 py-3">
+            {guestName ? (
+              <>
+                <p className="text-[10px] font-semibold tracking-[0.34em] text-[#b08a3e] uppercase">Selamat datang</p>
+                <p className="font-script guest-name-glow mt-0.5 max-w-[80vw] truncate text-[32px] leading-[1.15] text-[#4a3d32] sm:text-[40px]">
+                  {guestName}
+                </p>
+                <div className="mx-auto my-1.5 h-px w-20 bg-[linear-gradient(90deg,transparent,#c4a35a,transparent)]" />
+                <h1 className="font-display text-[20px] leading-tight text-[var(--ink)] sm:text-[24px]">Pilih karakter Anda</h1>
+                <p className="mt-0.5 text-[12px] text-[#8b6a3c]">untuk menjelajahi taman kami</p>
+              </>
+            ) : (
+              <>
+                <p className="text-[10px] font-semibold tracking-[0.42em] text-[#b08a3e]">CHARACTER SELECT</p>
+                <h1 className="font-display mt-1 text-[32px] leading-none text-[var(--ink)] sm:text-[40px]">
+                  Pilih Tamu
+                </h1>
+                <p className="font-script mt-1 text-[22px] text-[#c98890]">Siapa yang menjelajahi taman?</p>
+              </>
+            )}
           </div>
         </header>
 
@@ -83,8 +99,10 @@ export default function CharacterSelectScreen({
           ))}
         </div>
 
-        <footer className="mb-2 flex w-full max-w-[420px] flex-col items-center">
-          <p className="mb-3 text-[12px] tracking-[0.12em] text-[#fff6e4]/90">{current.hint}</p>
+        <footer className="select-footer mb-1 flex w-full max-w-[420px] flex-col items-center rounded-[26px] px-4 pt-3 pb-3">
+          <p className="mb-2.5 text-[13px] font-medium tracking-[0.08em] text-[#fff6e4]">
+            <span className="text-[#f6dfa6]">✦</span> {current.hint}
+          </p>
           <button
             type="button"
             data-testid="enter-world"
@@ -97,26 +115,22 @@ export default function CharacterSelectScreen({
           >
             MASUK KE TAMAN
           </button>
-          <p className="mt-3 hidden text-[11px] tracking-[0.16em] text-[#fff6e4]/75 sm:block">
-            ← → untuk memilih · Enter atau dobel-klik untuk masuk
+          <p className="mt-2.5 hidden items-center gap-1.5 text-[12px] tracking-[0.06em] text-[#fff6e4] sm:flex">
+            <kbd className="select-kbd">←</kbd>
+            <kbd className="select-kbd">→</kbd>
+            <span className="mr-1">pilih</span>
+            <kbd className="select-kbd">Enter</kbd>
+            <span>atau dobel-klik untuk masuk</span>
           </p>
-          <p className="mt-3 text-[11px] tracking-[0.16em] text-[#fff6e4]/75 sm:hidden">
+          <p className="mt-2.5 text-[12px] tracking-[0.06em] text-[#fff6e4] sm:hidden">
             Ketuk karakter, lalu masuk ke taman
           </p>
-          <div className="mt-3 flex items-center justify-center gap-5">
-            <button
-              type="button"
-              onClick={onBack}
-              className="text-[12px] tracking-[0.16em] text-[#ffe9b0]"
-            >
-              Kembali
+          <div className="mt-2.5 flex items-center justify-center gap-2">
+            <button type="button" onClick={onBack} className="select-chip">
+              ← Kembali
             </button>
-            <button
-              type="button"
-              onClick={onToggleMusic}
-              className="text-[12px] tracking-[0.16em] text-[#ffe9b0]"
-            >
-              {musicOn ? "Musik menyala" : "Musik mati"}
+            <button type="button" onClick={onToggleMusic} className="select-chip">
+              {musicOn ? "♪ Musik menyala" : "∅ Musik mati"}
             </button>
           </div>
         </footer>
@@ -205,7 +219,7 @@ function CharacterPod({
           }`}
         >
           <img
-            src={cutPlayerUrl(`${frame}.png`)}
+            src={cutPlayerUrl(character.frames.find((f) => f.dest === frame)?.file ?? `${frame}.png`)}
             alt=""
             draggable={false}
             className={`h-[200px] w-auto max-w-none object-contain drop-shadow-[0_18px_18px_rgba(40,28,16,0.35)] sm:h-[290px] ${

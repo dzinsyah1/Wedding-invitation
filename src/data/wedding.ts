@@ -9,7 +9,7 @@ export const wedding: WeddingData = {
     groom: "Dzin Syah",
     bride: "Titin",
   },
-  dateDisplay: "20.09.2026",
+  dateDisplay: "21.11.2026",
   tagline: "Walk Through Our Garden",
   welcome: {
     bismillah: "Bismillahirrahmanirrahim",
@@ -20,17 +20,19 @@ export const wedding: WeddingData = {
   },
   couple: {
     groom: {
-      fullName: "Mugh Dzin Syah",
+      fullName: "Mugh Dzin Syah, S.T.",
       nickname: "Dzin Syah",
       photo: "/images/groom-portrait.jpg",
-      parents: "Putra dari Bapak Ahmad Pratama & Ibu Siti Aminah",
+      portrait: "/photo-profile/groom-garden.jpg",
+      parents: "Putra dari Alm. Bapak Nur Wahid & Ibu Ulfatun Nikmah",
       title: "The Groom",
     },
     bride: {
-      fullName: "Mirrotin Nuriyyah",
+      fullName: "Mirrotin Nuriyyah, S.Tr.Kes.",
       nickname: "Titin",
       photo: "/images/bride-portrait.jpg",
-      parents: "Putri dari Bapak Hasan Abdullah & Ibu Fatimah Zahra",
+      portrait: "/photo-profile/bride-garden.jpg",
+      parents: "Putri dari Bapak Sunaryo & Ibu Djumilatin",
       title: "The Bride",
     },
   },
@@ -38,57 +40,61 @@ export const wedding: WeddingData = {
     {
       id: "akad",
       title: "Akad Nikah",
-      date: "Minggu, 20 September 2026",
+      date: "Sabtu, 21 November 2026",
       time: "09.00 WIB",
-      venue: "Masjid Al-Hikmah",
-      address: "Jl. Melati Indah No. 12, Jakarta Selatan",
-      mapUrl: "https://maps.google.com/?q=Masjid+Al-Hikmah+Jakarta+Selatan",
+      venue: "Kediaman Keluarga Mempelai Wanita",
+      address: "Jl. Teratai Gg. IX No. 30, RT 04/RW 07, Dsn. Ngelundo Utara, Ds. Candimulyo, Kab. Jombang, Jawa Timur",
+      // Pin on Jl. Teratai IX (Gang IX), Nglundo; located via the Google Maps street labels.
+      coords: { lat: -7.535725, lng: 112.24399 },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=-7.535725,112.24399",
       notes: "Diharapkan hadir 15 menit sebelum acara dimulai.",
     },
     {
       id: "reception",
       title: "Walimatul Ursy",
-      date: "Minggu, 20 September 2026",
+      date: "Sabtu, 21 November 2026",
       time: "11.00 – 14.00 WIB",
-      venue: "The Garden Hall",
-      address: "Jl. Kemang Raya No. 88, Jakarta Selatan",
-      mapUrl: "https://maps.google.com/?q=The+Garden+Hall+Kemang+Jakarta",
-      dressCode: "Earth tone, sage, ivory, atau dusty rose",
-      notes: "Acara dilanjutkan dengan jamuan dan foto bersama.",
+      venue: "Kediaman Keluarga Mempelai Wanita",
+      address: "Jl. Teratai Gg. IX No. 30, RT 04/RW 07, Dsn. Ngelundo Utara, Ds. Candimulyo, Kab. Jombang, Jawa Timur",
+      coords: { lat: -7.535725, lng: 112.24399 },
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=-7.535725,112.24399",
+      dressCode: "",
+      notes: "",
     },
   ],
+  // Story chapters shown in the swipeable "Our Story" modal and the full invitation.
   story: [
     {
-      id: "meet",
-      year: "2019",
-      title: "First Meeting",
+      id: "awal-kisah",
+      title: "Awal Kisah",
       description:
-        "Kami bertemu di sebuah taman kampus yang teduh. Percakapan sederhana itu menjadi awal dari perjalanan yang tak pernah kami duga.",
-      image: "/images/gallery-meeting.jpg",
+        "Tak pernah kami bayangkan bahwa sebuah sapaan di ruang digital akan menjadi awal dari cerita yang begitu berarti. Berawal dari dua orang asing yang saling bertukar cerita, perlahan tumbuh rasa nyaman yang menghapus segala keraguan. Dari ribuan kemungkinan, semesta mempertemukan kami di waktu yang paling tepat.",
+      image: "/photo album/photo_2026-09-28 12.14.29.jpeg",
+      focus: "50% 48%",
     },
     {
-      id: "closer",
-      year: "2021",
-      title: "We Became Closer",
+      id: "saling-bertumbuh",
+      title: "Saling Bertumbuh",
       description:
-        "Waktu mengajarkan kami untuk tumbuh bersama. Dari tawa, doa, hingga langkah-langkah kecil yang perlahan terasa seperti rumah.",
-      image: "/images/gallery-closer.jpg",
+        "Perjalanan kami tidak selalu dipenuhi kemudahan. Ada perbedaan yang harus dipahami, ego yang harus diredam, dan jarak yang harus dilalui dengan kesabaran. Namun dari setiap proses itu, kami belajar bahwa cinta bukan tentang menemukan yang sempurna, melainkan tentang saling menerima dan terus bertumbuh bersama.",
+      image: "/photo album/photo_2026-09-28 12.14.31.jpeg",
+      focus: "50% 32%",
     },
     {
-      id: "proposal",
-      year: "2025",
-      title: "The Proposal",
+      id: "satu-pilihan",
+      title: "Satu Pilihan",
       description:
-        "Di bawah cahaya senja dan bunga yang berguguran, sebuah janji diucapkan. Bukan hanya untuk hari ini, tetapi untuk seumur hidup.",
-      image: "/images/gallery-proposal.jpg",
+        "Semakin lama melangkah, semakin kami yakin bahwa hati ini telah menemukan tempat pulangnya. Dengan restu keluarga dan keyakinan yang sama, kami memutuskan untuk membawa hubungan ini ke jenjang yang lebih serius. Bukan karena perjalanan telah tanpa rintangan, tetapi karena kami ingin menghadapi setiap rintangan bersama.",
+      image: "/photo album/photo_2026-09-28 12.14.43.jpeg",
+      focus: "50% 52%",
     },
     {
-      id: "wedding",
-      year: "2026",
-      title: "Our Wedding",
+      id: "awal-selamanya",
+      title: "Awal Selamanya",
       description:
-        "Kini kami mengundang Anda untuk menjadi saksi dan bagian dari hari yang kami nantikan dengan penuh syukur.",
-      image: "/images/gallery-wedding.jpg",
+        "Hari ini menjadi saksi atas doa-doa yang akhirnya dipertemukan dalam satu ikatan suci. Di hadapan Tuhan dan orang-orang terkasih, kami mengucapkan janji untuk saling mencintai, menjaga, dan menguatkan sepanjang hidup. Pernikahan ini bukan akhir dari kisah kami, melainkan awal dari perjalanan panjang yang akan kami tulis bersama, selangkah demi selangkah.",
+      image: "/photo album/photo_2026-09-28 12.14.40.jpeg",
+      focus: "50% 42%",
     },
   ],
   gallery: [
@@ -113,8 +119,39 @@ export const wedding: WeddingData = {
       caption: "Menuju hari yang kami nantikan",
     },
   ],
+  album: [
+    { id: "a1", src: "/photo album/photo_2026-09-28 12.14.29.jpeg", caption: "" },
+    { id: "a2", src: "/photo album/photo_2026-09-28 12.14.31.jpeg", caption: "" },
+    { id: "a3", src: "/photo album/photo_2026-09-28 12.14.32.jpeg", caption: "" },
+    { id: "a4", src: "/photo album/photo_2026-09-28 12.14.33.jpeg", caption: "" },
+    { id: "a5", src: "/photo album/photo_2026-09-28 12.14.35.jpeg", caption: "" },
+    { id: "a6", src: "/photo album/photo_2026-09-28 12.14.39.jpeg", caption: "" },
+    { id: "a7", src: "/photo album/photo_2026-09-28 12.14.40.jpeg", caption: "" },
+    { id: "a8", src: "/photo album/photo_2026-09-28 12.14.42.jpeg", caption: "" },
+    { id: "a9", src: "/photo album/photo_2026-09-28 12.14.43.jpeg", caption: "" },
+    { id: "a10", src: "/photo album/photo_2026-09-28 12.14.46.jpeg", caption: "" },
+    { id: "a11", src: "/photo album/photo_2026-09-28 12.14.48.jpeg", caption: "" },
+  ],
+  quran: {
+    arabic:
+      "وَمِنْ اٰيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً ۗاِنَّ فِيْ ذٰلِكَ لَاٰيٰتٍ لِّقَوْمٍ يَّتَفَكَّرُوْنَ",
+    translation:
+      "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.",
+    source: "QS. Ar-Rum : 21",
+  },
+  prayer: {
+    arabic: "بَارَكَ اللّٰهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِيْ خَيْرٍ",
+    translation:
+      "Semoga Allah memberkahimu dalam suka maupun duka, dan menyatukan kalian berdua dalam kebaikan.",
+    source: "HR. Abu Dawud, Tirmidzi & Ibnu Majah",
+  },
+  closing: {
+    message:
+      "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu. Atas kehadiran dan doanya, kami ucapkan terima kasih.",
+    salam: "Wassalamu'alaikum Warahmatullahi Wabarakatuh",
+  },
   countdown: {
-    targetDate: "2026-09-20T09:00:00+07:00",
+    targetDate: "2026-11-21T09:00:00+07:00",
     timezone: "Asia/Jakarta",
   },
   rsvp: {
@@ -126,27 +163,23 @@ export const wedding: WeddingData = {
     banks: [
       {
         bank: "BCA",
-        number: "1234567890",
+        number: "3660439586",
         holder: "Mugh Dzin Syah",
+        owner: "Mempelai Pria",
       },
       {
-        bank: "Mandiri",
-        number: "9876543210",
+        bank: "BNI",
+        number: "0456571736",
         holder: "Mirrotin Nuriyyah",
+        owner: "Mempelai Wanita",
       },
     ],
-    ewallets: [
-      {
-        name: "Dana",
-        number: "081234567890",
-        holder: "Mugh Dzin Syah",
-      },
-    ],
-    address: "Jl. Melati Indah No. 12, Jakarta Selatan, 12560",
+    address:
+      "Jl. Teratai Gg. IX No. 30, RT 04/RW 07, Dsn. Ngelundo Utara, Ds. Candimulyo, Kab. Jombang, Jawa Timur 61413",
   },
   music: {
     title: "Soft Garden Prelude",
-    enabledByDefault: false,
+    enabledByDefault: true,
   },
   world,
   theme,

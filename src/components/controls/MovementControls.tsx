@@ -1,21 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
-function useTouchControls() {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    const sync = () => {
-      setShow(window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768);
-    };
-    sync();
-    window.addEventListener("resize", sync);
-    return () => window.removeEventListener("resize", sync);
-  }, []);
-
-  return show;
-}
+import { useEffect, useRef } from "react";
+import { useTouchUI } from "@/lib/useTouchUI";
 
 function Arrow({ dir }: { dir: "left" | "right" | "up" }) {
   const rotate = dir === "left" ? "rotate-180" : dir === "up" ? "-rotate-90" : "";
@@ -53,14 +39,18 @@ function Arrow({ dir }: { dir: "left" | "right" | "up" }) {
 
 export default function MovementControls({
   disabled,
+  actionLabel,
   onDir,
   onJump,
+  onAction,
 }: {
   disabled?: boolean;
+  actionLabel?: string | null;
   onDir: (dir: number) => void;
   onJump: (down: boolean) => void;
+  onAction: () => void;
 }) {
-  const show = useTouchControls();
+  const show = useTouchUI();
   const onDirRef = useRef(onDir);
   const onJumpRef = useRef(onJump);
   const holding = useRef(false);
@@ -122,6 +112,25 @@ export default function MovementControls({
       >
         <Arrow dir="left" />
       </button>
+      {actionLabel && !disabled ? (
+        // Near an object the jump button turns into the one primary action.
+        <button
+          key={actionLabel}
+          type="button"
+          aria-label={`Buka ${actionLabel}`}
+          className="action-btn hint-pop pointer-events-auto flex h-[3.85rem] max-w-[46vw] min-w-[128px] flex-col items-center justify-center rounded-full px-5 active:scale-95"
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={onAction}
+        >
+          <span className="flex items-center gap-1.5 text-[13px] font-semibold tracking-[0.12em] uppercase">
+            <span className="text-[#e8b84a]" aria-hidden="true">✦</span>
+            Buka
+          </span>
+          <span className="max-w-full truncate text-[10.5px] text-[#f6dfa6]/90">
+            {/^buka\b/i.test(actionLabel) ? actionLabel.replace(/^buka\s*/i, "") : actionLabel}
+          </span>
+        </button>
+      ) : (
       <button
         type="button"
         aria-label="Loncat"
@@ -136,6 +145,7 @@ export default function MovementControls({
       >
         <Arrow dir="up" />
       </button>
+      )}
       <button
         type="button"
         aria-label="Jalan ke kanan"

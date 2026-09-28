@@ -7,6 +7,7 @@ export class InteractionSystem {
   current: WorldLocation | null = null;
   private visited = new Set<string>();
   private modalOpen = false;
+  private suspended = false;
   private hovered: WorldLocation | null = null;
   private markers = new Map<string, Phaser.GameObjects.Container>();
   private reduced: boolean;
@@ -48,12 +49,19 @@ export class InteractionSystem {
       this.refreshHint();
     }
 
-    const loc = this.modalOpen ? null : (this.hovered ?? this.current);
+    const loc = this.modalOpen || this.suspended ? null : (this.hovered ?? this.current);
     if (loc) this.emitPos(loc);
   }
 
   private reach(loc: WorldLocation) {
     return Math.min(this.isMobile ? 78 : 96, loc.width * 0.22);
+  }
+
+  // Hides the prompt while the player is mid-teleport.
+  setSuspended(suspended: boolean) {
+    this.suspended = suspended;
+    this.hovered = null;
+    this.refreshHint();
   }
 
   lock(ms: number) {
@@ -62,7 +70,7 @@ export class InteractionSystem {
 
   interact(loc?: WorldLocation) {
     const target = loc ?? this.hovered ?? this.current;
-    if (!target || this.modalOpen || this.scene.time.now < this.lockedUntil) return;
+    if (!target || this.modalOpen || this.suspended || this.scene.time.now < this.lockedUntil) return;
     this.player.playInteract();
     gameEvents.emit(GAME_EVENTS.OPEN_MODAL, {
       type: target.interaction.type,
@@ -94,7 +102,7 @@ export class InteractionSystem {
   private makeMarker(loc: WorldLocation, groundY: number) {
     const wrap = this.scene.add.container(loc.x, groundY - loc.promptLift * 0.8);
     wrap.setDepth(46);
-    wrap.setAlpha(this.isMobile ? 0.42 : 0.32);
+    wrap.setAlpha(this.isMobile ? 0.75 : 0.65);
 
     const g = this.scene.add.graphics();
     const dots = [
@@ -124,7 +132,7 @@ export class InteractionSystem {
   }
 
   private refreshHint() {
-    const loc = this.modalOpen ? null : (this.hovered ?? this.current);
+    const loc = this.modalOpen || this.suspended ? null : (this.hovered ?? this.current);
     this.markers.forEach((marker, id) => {
       const active = loc?.id === id;
       marker.setVisible(!active);

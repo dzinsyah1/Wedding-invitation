@@ -28,7 +28,7 @@ export const CHROMA_ASSETS: ChromaAsset[] = [
   { key: "gift", file: "pixar-gift.png", mode: "blue", kind: "cutout", minTier: "low" },
   { key: "story", file: "pixar-story.png", mode: "blue", kind: "cutout", minTier: "low" },
   { key: "gallery", file: "pixar-gallery.png", mode: "blue", kind: "cutout", minTier: "low" },
-  { key: "finale", file: "pixar-finale.png", mode: "blue", kind: "cutout", minTier: "low" },
+  { key: "finale", file: "pixar-finale-clean.png", mode: "blue", kind: "cutout", minTier: "low" },
   { key: "leaf-wall", file: "pixar-leaf-wall.png", mode: "blue", kind: "cutout", minTier: "low" },
   { key: "garden-tree", file: "pixar-garden-tree.png", mode: "blue", kind: "cutout", minTier: "low" },
   { key: "mixed-cluster", file: "pixar-mixed-cluster.png", mode: "blue", kind: "cutout", minTier: "low" },
@@ -45,11 +45,11 @@ export const CHROMA_ASSETS: ChromaAsset[] = [
   { key: "rose-arch", file: "pixar-rose-arch.png", mode: "blue", kind: "cutout", minTier: "medium" },
   { key: "hang-vines", file: "pixar-hang-vines.png", mode: "warm", kind: "cutout", minTier: "medium" },
   { key: "blossom-canopy", file: "pixar-blossom-canopy.png", mode: "blue", kind: "cutout", minTier: "medium" },
-  { key: "bird", file: "pixar-bird.png", mode: "blue", kind: "cutout", minTier: "high" },
-  { key: "butterfly", file: "pixar-butterfly.png", mode: "blue", kind: "cutout", minTier: "high" },
-  { key: "dove-fly-a", file: "pixar-dove-fly-a.png", mode: "blue", kind: "cutout", minTier: "high" },
-  { key: "dove-fly-b", file: "pixar-dove-fly-b.png", mode: "blue", kind: "cutout", minTier: "high" },
-  { key: "dove-idle", file: "pixar-dove-idle.png", mode: "blue", kind: "cutout", minTier: "high" },
+  { key: "bird", file: "pixar-bird-sm.png", mode: "blue", kind: "cutout", minTier: "medium" },
+  { key: "butterfly", file: "pixar-butterfly-sm.png", mode: "blue", kind: "cutout", minTier: "medium" },
+  { key: "dove-fly-a", file: "pixar-dove-fly-a-sm.png", mode: "blue", kind: "cutout", minTier: "medium" },
+  { key: "dove-fly-b", file: "pixar-dove-fly-b-sm.png", mode: "blue", kind: "cutout", minTier: "medium" },
+  { key: "dove-idle", file: "pixar-dove-idle-sm.png", mode: "blue", kind: "cutout", minTier: "medium" },
 ];
 
 export const PLAYER_FRAMES = PLAYER_CHARACTER_LIST.flatMap((character) =>
@@ -118,9 +118,9 @@ export function qualitySettings(tier: QualityTier) {
     foregroundMix: tier !== "low",
     clouds: tier !== "low",
     petals: tier !== "low",
-    butterflies: tier === "high",
-    doves: tier === "high",
-    birds: tier === "high",
+    butterflies: tier !== "low",
+    doves: tier !== "low",
+    birds: tier !== "low",
     lighting: tier !== "low",
     groundDetail: tier === "high",
   };
@@ -133,5 +133,5 @@ export function cutAssetUrl(file: string) {
 }
 
 export function cutPlayerUrl(file: string) {
-  return `/images/cut/${file}?v=char4`;
+  return `/images/cut/${file}?v=char6`;
 }

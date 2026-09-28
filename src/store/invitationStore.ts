@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import type { ModalType, PromptPayload } from "@/game/events/gameEvents";
 import type { PlayerCharacterId } from "@/game/player/characters";
+import { wedding } from "@/data/wedding";
 
-export type AppPhase = "loading" | "opening" | "select" | "playing" | "fallback";
+export type AppPhase = "loading" | "opening" | "select" | "playing" | "invitation" | "fallback";
 
 interface InvitationState {
   phase: AppPhase;
@@ -31,7 +32,7 @@ export const useInvitationStore = create<InvitationState>((set) => ({
   phase: "loading",
   progress: 0,
   guestName: "",
-  musicOn: false,
+  musicOn: wedding.music.enabledByDefault,
   reducedMotion: false,
   selectedCharacter: null,
   prompt: null,

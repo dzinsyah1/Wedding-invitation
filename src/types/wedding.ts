@@ -13,6 +13,8 @@ export interface Person {
   fullName: string;
   nickname: string;
   photo: string;
+  /** Real photo shown in the full (non-game) invitation. */
+  portrait?: string;
   parents: string;
   title: string;
 }
@@ -25,16 +27,21 @@ export interface EventData {
   venue: string;
   address: string;
   mapUrl: string;
+  /** Exact map pin; used for the embedded map instead of a text search. */
+  coords?: { lat: number; lng: number };
   notes?: string;
   dressCode?: string;
 }
 
 export interface StoryChapter {
   id: string;
-  year: string;
+  /** Optional date label; chapters without one show their number. */
+  year?: string;
   title: string;
   description: string;
   image?: string;
+  /** CSS object-position for the photo crop, e.g. "50% 40%". */
+  focus?: string;
 }
 
 export interface GalleryItem {
@@ -45,8 +52,11 @@ export interface GalleryItem {
 
 export interface BankAccount {
   bank: string;
+  /** Digits only; displayed grouped, copied as-is. */
   number: string;
   holder: string;
+  /** Whose account it is, e.g. "Mempelai Pria". */
+  owner?: string;
 }
 
 export interface EWallet {
@@ -58,7 +68,7 @@ export interface EWallet {
 export interface GiftData {
   message: string;
   banks: BankAccount[];
-  ewallets: EWallet[];
+  ewallets?: EWallet[];
   address?: string;
 }
 
@@ -109,6 +119,12 @@ export interface WorldLocation {
   };
 }
 
+export interface ScriptureQuote {
+  arabic: string;
+  translation: string;
+  source: string;
+}
+
 export interface ParallaxConfig {
   clouds: number;
   mountains: number;
@@ -157,6 +173,14 @@ export interface WeddingData {
   events: EventData[];
   story: StoryChapter[];
   gallery: GalleryItem[];
+  /** Real photos for the full invitation page. */
+  album: GalleryItem[];
+  quran: ScriptureQuote;
+  prayer: ScriptureQuote;
+  closing: {
+    message: string;
+    salam: string;
+  };
   countdown: CountdownData;
   rsvp: RSVPConfig;
   gift: GiftData;

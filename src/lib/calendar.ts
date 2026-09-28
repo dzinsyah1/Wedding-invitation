@@ -39,12 +39,12 @@ export function downloadIcs(options: {
 export function eventTimes(id: string) {
   if (id === "akad") {
     return {
-      start: new Date("2026-09-20T09:00:00+07:00"),
-      end: new Date("2026-09-20T10:30:00+07:00"),
+      start: new Date("2026-11-21T09:00:00+07:00"),
+      end: new Date("2026-11-21T10:30:00+07:00"),
     };
   }
   return {
-    start: new Date("2026-09-20T11:00:00+07:00"),
-    end: new Date("2026-09-20T14:00:00+07:00"),
+    start: new Date("2026-11-21T11:00:00+07:00"),
+    end: new Date("2026-11-21T14:00:00+07:00"),
   };
 }
