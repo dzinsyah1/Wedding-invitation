@@ -39,8 +39,8 @@ export class Player extends Phaser.GameObjects.Container {
   private readonly jumpSpeed = 430;
   private readonly gravity = 1480;
   /** Air control while bouncing: top horizontal speed and how fast input changes it. */
-  private readonly airMaxSpeed = 460;
-  private readonly airAccel = 1100;
+  private readonly airMaxSpeed = 300;
+  private readonly airAccel = 360;
   interacting = false;
   /** Carried down from the sky on arrival: hold the airborne pose and sway. */
   floating = false;

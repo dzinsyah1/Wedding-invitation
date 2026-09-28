@@ -70,8 +70,7 @@ export class WeddingWorldScene extends Phaser.Scene {
     this.play = new PlaySystem(this, world, this.player, (kind) => {
       if (kind === "bounce") this.audio.bounce();
       else if (kind === "catch") this.audio.catchDove();
-      else if (kind === "release") this.audio.releaseDove();
-      else this.audio.fanfare();
+      else this.audio.releaseDove();
     });
     this.reduced = reduced;
     this.lighting = settings.lighting
@@ -86,7 +85,7 @@ export class WeddingWorldScene extends Phaser.Scene {
       this.keyEnter = this.input.keyboard.addKey("ENTER");
       // Event-based so even a very quick tap is never missed between frames.
       this.input.keyboard.on("keydown-R", () => {
-        if (this.playing && !this.modalOpen && !this.overlayOpen) this.play.releaseDove();
+        if (this.playing && !this.modalOpen && !this.overlayOpen) this.play.toggleDove();
       });
       this.keyW = this.input.keyboard.addKey("W");
       this.keySpace = this.input.keyboard.addKey("SPACE");
@@ -188,7 +187,7 @@ export class WeddingWorldScene extends Phaser.Scene {
         this.input.enabled = true;
       });
       gameEvents.emit(GAME_EVENTS.PLAYER_LANDED);
-      this.play.emitCount();
+      this.play.emitState();
       return;
     }
 
@@ -202,7 +201,7 @@ export class WeddingWorldScene extends Phaser.Scene {
       this.interaction.lock(400);
       this.input.enabled = true;
       gameEvents.emit(GAME_EVENTS.PLAYER_LANDED);
-      this.play.emitCount();
+      this.play.emitState();
     });
   }
 

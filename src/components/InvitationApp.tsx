@@ -197,7 +197,7 @@ export default function InvitationApp() {
             </div>
           ) : null}
           <InteractionHint />
-          <PlayHud hidden={!landed || Boolean(store.modal)} onOpenInvitation={() => openInvitation("playing")} />
+          <PlayHud hidden={!landed || Boolean(store.modal)} quiet={store.instructionVisible} onOpenInvitation={() => openInvitation("playing")} />
         </>
       ) : null}
 

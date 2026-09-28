@@ -6,12 +6,12 @@ import { showToast } from "@/components/ui/Toast";
 import { useTouchUI } from "@/lib/useTouchUI";
 import { track } from "@/lib/analytics";
 
-type Doves = { released: number; total: number; carrying: boolean };
+type Doves = { carrying: boolean };
 type Tip = "pad" | "dove" | null;
 
 // Survives the HUD unmounting (e.g. while the full invitation is open) so the
 // count is right again on return; the game only re-sends it on change.
-let lastDoves: Doves = { released: 0, total: 0, carrying: false };
+let lastDoves: Doves = { carrying: false };
 
 function EnvelopeIcon() {
   return (
@@ -41,34 +41,35 @@ function DoveIcon({ className = "h-5 w-5" }: { className?: string }) {
 }
 
 /** Top-left HUD: invitation button, dove counter / release button, one-time tips. */
-export default function PlayHud({ hidden, onOpenInvitation }: { hidden: boolean; onOpenInvitation: () => void }) {
+export default function PlayHud({
+  hidden,
+  quiet = false,
+  onOpenInvitation,
+}: {
+  hidden: boolean;
+  /** Hold tips back (e.g. while the intro instruction is on screen). */
+  quiet?: boolean;
+  onOpenInvitation: () => void;
+}) {
   const [doves, setDoves] = useState<Doves>(lastDoves);
-  const [bump, setBump] = useState(0);
   const [tip, setTip] = useState<Tip>(null);
+  const [pending, setPending] = useState<Tip>(null);
   const seen = useRef({ pad: false, dove: false });
-  const lastReleased = useRef(lastDoves.released);
   const touch = useTouchUI();
 
   useEffect(() => {
-    let tipTimer = 0;
     const showTip = (kind: Exclude<Tip, null>) => {
       if (seen.current[kind]) return;
       seen.current[kind] = true;
-      window.clearTimeout(tipTimer);
-      setTip(kind);
-      tipTimer = window.setTimeout(() => setTip(null), 3000);
+      setPending(kind);
     };
 
     const offDoves = gameEvents.on(GAME_EVENTS.DOVES, (payload) => {
       const data = payload as Doves;
-      if (data.released > lastReleased.current) {
-        setBump((n) => n + 1);
-        if (data.released === data.total) {
-          track("doves_all_released");
-          showToast("Semua merpati telah terbang ♡", "Membawa doa terbaik untuk kedua mempelai");
-        }
+      if (lastDoves.carrying && !data.carrying) {
+        track("dove_released");
+        showToast("Merpati telah terbang ♡", "Membawa doa terbaik untuk kedua mempelai");
       }
-      lastReleased.current = data.released;
       lastDoves = data;
       setDoves(data);
     });
@@ -78,18 +79,29 @@ export default function PlayHud({ hidden, onOpenInvitation }: { hidden: boolean;
       if (!seen.current.pad) track("first_bounce");
       seen.current.pad = true;
       setTip((t) => (t === "pad" ? null : t));
+      setPending((t) => (t === "pad" ? null : t));
     });
     return () => {
       offDoves();
       offCaught();
       offNear();
       offBounce();
-      window.clearTimeout(tipTimer);
     };
   }, []);
 
+  // Show a queued tip once nothing else is on screen; it closes itself after 3s.
+  useEffect(() => {
+    if (!pending || quiet) return;
+    setTip(pending);
+    setPending(null);
+  }, [pending, quiet]);
+  useEffect(() => {
+    if (!tip) return;
+    const id = window.setTimeout(() => setTip(null), 3000);
+    return () => window.clearTimeout(id);
+  }, [tip]);
+
   if (hidden) return null;
-  const done = doves.total > 0 && doves.released === doves.total;
 
   function release() {
     gameEvents.emit(GAME_EVENTS.RELEASE_DOVE);
@@ -114,50 +126,36 @@ export default function PlayHud({ hidden, onOpenInvitation }: { hidden: boolean;
           </span>
         </button>
 
-        {doves.total ? (
-          doves.carrying ? (
-            <button
-              type="button"
-              onClick={release}
-              className="release-btn hint-pop pointer-events-auto flex h-12 items-center gap-2 rounded-full pr-4 pl-3 active:scale-95"
-            >
-              <DoveIcon />
-              <span className="text-[12px] font-semibold tracking-[0.1em] text-[#fff6e8] uppercase">Lepaskan</span>
-              {!touch ? <kbd className="hint-key ml-0.5">R</kbd> : null}
-            </button>
-          ) : (
-            <div
-              key={bump}
-              className={`heart-pill flex h-12 items-center gap-2 rounded-full pr-4 pl-3 ${bump ? "heart-pill-bump" : ""} ${done ? "heart-pill-done" : ""}`}
-              aria-label={`${doves.released} dari ${doves.total} merpati dilepaskan`}
-            >
-              <DoveIcon />
-              <span className="font-display text-[16px] font-semibold text-[#4a3d32] tabular-nums">
-                {doves.released}
-                <span className="text-[#8b6a3c]/70">/{doves.total}</span>
-              </span>
-            </div>
-          )
+        {doves.carrying ? (
+          <button
+            type="button"
+            onClick={release}
+            className="release-btn hint-pop pointer-events-auto flex h-12 items-center gap-2 rounded-full pr-4 pl-3 active:scale-95"
+          >
+            <DoveIcon />
+            <span className="text-[12px] font-semibold tracking-[0.1em] text-[#fff6e8] uppercase">Lepaskan</span>
+            {!touch ? <kbd className="hint-key ml-0.5">R</kbd> : null}
+          </button>
         ) : null}
       </div>
 
       {tip ? (
         <div
           className="absolute left-1/2 z-20 w-max max-w-[92vw] -translate-x-1/2"
-          style={{ bottom: touch ? "calc(104px + env(safe-area-inset-bottom))" : "calc(40px + env(safe-area-inset-bottom))" }}
+          style={touch ? { top: "calc(140px + env(safe-area-inset-top))" } : { bottom: "calc(40px + env(safe-area-inset-bottom))" }}
         >
-          <div className="hint-bubble hint-pop relative rounded-[20px] py-2.5 pr-11 pl-5 text-center">
+          <div className="hint-bubble hint-pop relative rounded-[18px] py-2 pr-11 pl-4 text-center sm:py-2.5 sm:pl-5">
             {tip === "pad" ? (
               <>
                 <p className="font-script text-[22px] leading-none text-[#4a3d32]">Bunga Pantul ✦</p>
-                <p className="mt-1 text-[12px] text-[#6b5339]">
+                <p className="mt-1 text-[11.5px] leading-snug text-[#6b5339] sm:text-[12px]">
                   {touch ? "Tekan tombol lompat" : "Tekan spasi / ↑"} di atas bunga untuk melambung tinggi
                 </p>
               </>
             ) : (
               <>
                 <p className="font-script text-[22px] leading-none text-[#4a3d32]">Merpati hinggap ♡</p>
-                <p className="mt-1 text-[12px] text-[#6b5339]">
+                <p className="mt-1 text-[11.5px] leading-snug text-[#6b5339] sm:text-[12px]">
                   Tekan <b>Lepaskan</b>{touch ? "" : " / R"} untuk menerbangkan doa bagi mempelai
                 </p>
               </>
