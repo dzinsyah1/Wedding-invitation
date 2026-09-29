@@ -1,28 +1,35 @@
 import type { Metadata, Viewport } from "next";
-import { Amiri, Cormorant_Garamond, Great_Vibes, Nunito } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const display = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+// Self-hosted (files in ./fonts, from Google Fonts) so builds never depend on
+// fetching fonts.googleapis.com, which can fail on the build server.
+const display = localFont({
+  src: "./fonts/cormorant-garamond-all.woff2",
+  weight: "400 700",
   variable: "--font-display",
+  display: "swap",
 });
 
-const body = Nunito({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const body = localFont({
+  src: "./fonts/nunito-all.woff2",
+  weight: "400 700",
   variable: "--font-body",
+  display: "swap",
 });
 
-const script = Great_Vibes({
-  subsets: ["latin"],
+const script = localFont({
+  src: "./fonts/great-vibes-all.woff2",
   weight: "400",
   variable: "--font-script",
+  display: "swap",
 });
 
-const arabic = Amiri({
-  subsets: ["arabic"],
-  weight: ["400", "700"],
+const arabic = localFont({
+  src: [
+    { path: "./fonts/amiri-400.woff2", weight: "400" },
+    { path: "./fonts/amiri-700.woff2", weight: "700" },
+  ],
   variable: "--font-arabic",
   display: "swap",
 });
