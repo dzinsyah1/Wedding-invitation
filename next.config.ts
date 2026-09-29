@@ -12,6 +12,19 @@ const nextConfig: NextConfig = {
     };
     return config;
   },
+  // Old links shared on the Vercel domain go to the custom domain, keeping the
+  // path and query (so ?to=Nama still greets the guest). Preview deployments
+  // have other hostnames and are unaffected.
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "wedding-invitation-rho-drab.vercel.app" }],
+        destination: "https://wedding-dzinsyah-titin.web.id/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
