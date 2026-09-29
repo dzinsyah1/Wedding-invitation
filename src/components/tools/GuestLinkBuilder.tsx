@@ -8,7 +8,11 @@ import Flourish from "@/components/ui/Flourish";
 
 const DRAFT_KEY = "guest-link-draft";
 
-function messageFor(name: string, link: string) {
+/**
+ * `plain`: no emoji. Some Android WhatsApp builds turn emoji passed through
+ * wa.me/?text= into "�", while pasting from the clipboard keeps them intact.
+ */
+function messageFor(name: string, link: string, plain = false) {
   const [akad] = wedding.events;
   return [
     "Assalamu'alaikum Warahmatullahi Wabarakatuh",
@@ -21,8 +25,8 @@ function messageFor(name: string, link: string) {
     "&",
     `*${wedding.couple.bride.fullName}*`,
     "",
-    `🗓 ${akad.date}`,
-    `📍 ${akad.venue}`,
+    plain ? `*Hari/Tanggal:* ${akad.date}` : `🗓️ ${akad.date}`,
+    plain ? `*Tempat:* ${akad.venue}` : `📍 ${akad.venue}`,
     "",
     "Info lengkap acara dan konfirmasi kehadiran:",
     link,
@@ -130,7 +134,7 @@ export default function GuestLinkBuilder() {
                     Salin pesan
                   </button>
                   <a
-                    href={`https://wa.me/?text=${encodeURIComponent(messageFor(name, link))}`}
+                    href={`https://wa.me/?text=${encodeURIComponent(messageFor(name, link, true))}`}
                     target="_blank"
                     rel="noreferrer"
                     className="rounded-full bg-[#6a9e8a] px-4 py-2 text-[12px] text-white active:scale-95"

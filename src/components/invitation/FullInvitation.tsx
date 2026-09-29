@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { wedding } from "@/data/wedding";
-import { downloadIcs, eventTimes } from "@/lib/calendar";
+import { eventTimes, saveToCalendar } from "@/lib/calendar";
 import { track } from "@/lib/analytics";
 import Flourish, { CornerOrnaments } from "@/components/ui/Flourish";
 import RsvpForm from "@/components/wedding/RsvpForm";
@@ -339,14 +339,14 @@ function Countdown() {
 
 function saveCalendar(event: EventData) {
   const times = eventTimes(event.id);
-  downloadIcs({
+  const via = saveToCalendar({
     title: `${event.title} — ${wedding.names.display}`,
-    description: event.notes || event.title,
+    description: [event.notes, `Petunjuk arah: ${event.mapUrl}`].filter(Boolean).join("\n\n"),
     location: `${event.venue}, ${event.address}`,
     start: times.start,
     end: times.end,
   });
-  track("calendar_saved", { eventId: event.id });
+  track("calendar_saved", { eventId: event.id, via });
 }
 
 function EventCard({ event }: { event: EventData }) {

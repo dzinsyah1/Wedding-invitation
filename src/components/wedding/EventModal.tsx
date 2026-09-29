@@ -2,7 +2,7 @@
 
 import { wedding } from "@/data/wedding";
 import ModalShell from "@/components/modal/ModalShell";
-import { downloadIcs, eventTimes } from "@/lib/calendar";
+import { eventTimes, saveToCalendar } from "@/lib/calendar";
 import { track } from "@/lib/analytics";
 
 // "Sabtu, 21 November 2026" -> { weekday: "Sabtu", day: "21", month: "November", year: "2026" }
@@ -21,14 +21,14 @@ export default function EventModal({ eventId, onClose }: { eventId?: string; onC
     : encodeURIComponent(`${event.venue}, ${event.address}`);
 
   function saveCalendar() {
-    downloadIcs({
+    const via = saveToCalendar({
       title: `${event.title} — ${wedding.names.display}`,
-      description: event.notes || event.title,
+      description: [event.notes, `Petunjuk arah: ${event.mapUrl}`].filter(Boolean).join("\n\n"),
       location: `${event.venue}, ${event.address}`,
       start: times.start,
       end: times.end,
     });
-    track("calendar_saved", { eventId: event.id });
+    track("calendar_saved", { eventId: event.id, via });
   }
 
   return (
