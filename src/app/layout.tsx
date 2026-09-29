@@ -28,7 +28,7 @@ const arabic = Amiri({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://dzin-titin.wedding"),
+  metadataBase: new URL("https://wedding-dzinsyah-titin.web.id"),
   title: "Dzin Syah & Titin — Wedding Invitation",
   description:
     "Dengan penuh kebahagiaan, kami mengundang Anda untuk menjadi bagian dari hari istimewa kami.",
