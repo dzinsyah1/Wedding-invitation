@@ -9,6 +9,7 @@
 
 const SECRET = "GANTI_DENGAN_KODE_RAHASIA";
 const SHEET_NAME = "RSVP";
+const MAX_WISHES = 300;
 const HEADERS = ["Waktu", "Nama", "Kehadiran", "Jumlah Tamu", "Ucapan & Doa", "Link Tamu (?to=)"];
 
 function doPost(e) {
@@ -38,9 +39,32 @@ function doPost(e) {
   }
 }
 
-// Lets you open the /exec URL in a browser to check the deployment is live.
-function doGet() {
-  return json({ ok: true, service: "rsvp" });
+// ?action=wishes&secret=... returns the latest wishes (rows with a message)
+// for the guest book. Without it, opening the /exec URL in a browser just
+// checks the deployment is live.
+function doGet(e) {
+  const params = (e && e.parameter) || {};
+  if (params.action !== "wishes") return json({ ok: true, service: "rsvp" });
+  if (params.secret !== SECRET) return json({ ok: false, error: "unauthorized" });
+
+  const sheet = getSheet();
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return json({ ok: true, wishes: [] });
+
+  const rows = sheet.getRange(2, 1, lastRow - 1, 5).getValues();
+  const wishes = [];
+  for (let i = rows.length - 1; i >= 0 && wishes.length < MAX_WISHES; i--) {
+    const [time, name, attendance, , message] = rows[i];
+    const text = String(message || "").replace(/^'/, "").trim();
+    if (!text) continue;
+    wishes.push({
+      name: String(name || "").replace(/^'/, ""),
+      attendance: String(attendance || ""),
+      message: text,
+      time: time instanceof Date ? time.toISOString() : "",
+    });
+  }
+  return json({ ok: true, wishes: wishes });
 }
 
 function getSheet() {

@@ -195,3 +195,13 @@ export interface RSVPPayload {
   guests: number;
   message: string;
 }
+
+/** A guest-book entry as returned by GET /api/rsvp. */
+export interface Wish {
+  name: string;
+  /** Label as stored in the sheet: "Hadir", "Tidak hadir" or "Belum pasti". */
+  attendance: string;
+  message: string;
+  /** ISO timestamp; may be empty for rows without a valid date. */
+  time: string;
+}

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { wedding } from "@/data/wedding";
 import { track } from "@/lib/analytics";
+import type { Wish } from "@/types/wedding";
 
 type Attendance = "yes" | "no" | "maybe";
 
@@ -12,7 +13,14 @@ const OPTIONS: Array<[Attendance, string]> = [
   ["maybe", "Belum pasti"],
 ];
 
-export default function RsvpForm({ defaultName = "" }: { defaultName?: string }) {
+export default function RsvpForm({
+  defaultName = "",
+  onSubmitted,
+}: {
+  defaultName?: string;
+  /** Called after a successful RSVP that includes a message, to show it in the guest book. */
+  onSubmitted?: (wish: Wish) => void;
+}) {
   const [name, setName] = useState(defaultName);
   const [attendance, setAttendance] = useState<Attendance>("yes");
   const [guests, setGuests] = useState(1);
@@ -32,6 +40,10 @@ export default function RsvpForm({ defaultName = "" }: { defaultName?: string })
       if (!res.ok) throw new Error("fail");
       track("rsvp_submitted");
       setStatus("done");
+      if (message.trim()) {
+        const label = OPTIONS.find(([value]) => value === attendance)?.[1] ?? "";
+        onSubmitted?.({ name: name.trim(), attendance: label, message: message.trim(), time: new Date().toISOString() });
+      }
     } catch {
       setStatus("error");
     }

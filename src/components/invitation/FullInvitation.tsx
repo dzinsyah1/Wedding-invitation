@@ -6,6 +6,7 @@ import { eventTimes, saveToCalendar } from "@/lib/calendar";
 import { track } from "@/lib/analytics";
 import Flourish, { CornerOrnaments } from "@/components/ui/Flourish";
 import RsvpForm from "@/components/wedding/RsvpForm";
+import WishList, { useWishes } from "@/components/wedding/WishList";
 import GuestCard from "@/components/ui/GuestCard";
 import GiftAccounts from "@/components/wedding/GiftAccounts";
 import { AlbumGrid } from "@/components/ui/PhotoAlbum";
@@ -139,15 +140,7 @@ export default function FullInvitation({
           <Events />
           <Story />
           <Gallery />
-          <section id="rsvp" className="inv-section">
-            <Heading eyebrow="RSVP" title="Konfirmasi Kehadiran" />
-            <p className="reveal mx-auto mt-4 max-w-sm text-center text-[14px] leading-relaxed text-[#6b5339]">
-              Mohon konfirmasi kehadiran Anda agar kami dapat mempersiapkan jamuan dengan baik.
-            </p>
-            <div className="reveal paper-card mt-6 rounded-[26px] p-5 shadow-[0_18px_40px_rgba(80,60,30,0.1)]">
-              <RsvpForm defaultName={guestName} />
-            </div>
-          </section>
+          <Rsvp guestName={guestName} />
           <Gift />
           <Prayer />
           <Closing guestName={guestName} onExplore={onExplore} />
@@ -185,6 +178,24 @@ export default function FullInvitation({
       </div>
 
     </div>
+  );
+}
+
+function Rsvp({ guestName }: { guestName: string }) {
+  const guestBook = useWishes();
+  return (
+    <section id="rsvp" className="inv-section">
+      <Heading eyebrow="RSVP" title="Konfirmasi Kehadiran" />
+      <p className="reveal mx-auto mt-4 max-w-sm text-center text-[14px] leading-relaxed text-[#6b5339]">
+        Mohon konfirmasi kehadiran Anda agar kami dapat mempersiapkan jamuan dengan baik.
+      </p>
+      <div className="reveal paper-card mt-6 rounded-[26px] p-5 shadow-[0_18px_40px_rgba(80,60,30,0.1)]">
+        <RsvpForm defaultName={guestName} onSubmitted={guestBook.add} />
+      </div>
+      <div className="reveal paper-card mt-6 rounded-[26px] px-4 pt-6 pb-5 shadow-[0_18px_40px_rgba(80,60,30,0.1)]">
+        <WishList wishes={guestBook.wishes} status={guestBook.status} onRetry={guestBook.reload} />
+      </div>
+    </section>
   );
 }
 

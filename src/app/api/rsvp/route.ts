@@ -1,4 +1,6 @@
+import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+import type { Wish } from "@/types/wedding";
 
 // RSVPs are appended to a Google Sheet through an Apps Script web app
 // (see scripts/rsvp-google-sheet.gs). The secret keeps others from writing
@@ -68,5 +70,34 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "Gagal menyimpan RSVP." }, { status: 502 });
   }
 
+  revalidateTag(WISHES_TAG);
   return NextResponse.json({ ok: true, stored: true });
+}
+
+const WISHES_TAG = "rsvp-wishes";
+
+// Guest book: the latest wishes, cached briefly so the slow Apps Script is not
+// hit on every visit. A new RSVP clears the cache (see POST above).
+export async function GET() {
+  if (!SHEET_URL || !SHEET_SECRET) {
+    return NextResponse.json({ ok: true, wishes: [] });
+  }
+
+  try {
+    const url = `${SHEET_URL}?action=wishes&secret=${encodeURIComponent(SHEET_SECRET)}`;
+    const res = await fetch(url, {
+      redirect: "follow",
+      signal: AbortSignal.timeout(12000),
+      next: { revalidate: 15, tags: [WISHES_TAG] },
+    });
+    const result = (await res.json().catch(() => null)) as { ok?: boolean; wishes?: Wish[]; error?: string } | null;
+    if (!res.ok || !result?.ok || !Array.isArray(result.wishes)) {
+      console.error("[rsvp] wishes request rejected:", res.status, result?.error);
+      return NextResponse.json({ ok: false, wishes: [] }, { status: 502 });
+    }
+    return NextResponse.json({ ok: true, wishes: result.wishes });
+  } catch (err) {
+    console.error("[rsvp] wishes request failed:", err);
+    return NextResponse.json({ ok: false, wishes: [] }, { status: 502 });
+  }
 }

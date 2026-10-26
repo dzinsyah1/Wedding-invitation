@@ -881,6 +881,18 @@ canvas {
   transform: none;
 }
 
+/* ---------- Guest book (ucapan & doa) ---------- */
+.wish-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 250, 240, 0.7) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(212, 175, 90, 0.28),
+    0 6px 16px rgba(80, 60, 30, 0.06);
+}
+
+.wish-in {
+  animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 /* ---------- Modal decoration ---------- */
 .modal-backdrop {
   animation: modalFade 0.3s ease both;
@@ -1082,6 +1094,10 @@ canvas {
 
   .modal-petal {
     display: none;
+  }
+
+  .wish-in {
+    animation: none;
   }
 
   .reveal,
