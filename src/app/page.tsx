@@ -5,8 +5,8 @@ import { readGuestName } from "@/lib/guest";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
-// Personal link (?to=Nama): name the guest in the tab title and in the
-// WhatsApp/social preview so the invitation feels addressed to them.
+// Personal link (?to=Nama): the WhatsApp/social preview shows the couple and
+// the date. The guest is addressed in the message and on the invitation itself.
 export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
   const params = await searchParams;
   const query = new URLSearchParams(
@@ -14,12 +14,12 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
   ).toString();
   const guest = readGuestName(query);
   if (!guest) return {};
-  const title = `Undangan untuk ${guest} — ${wedding.names.display}`;
-  const description = `Kepada Yth. ${guest}, dengan penuh kebahagiaan kami mengundang Anda ke pernikahan ${wedding.names.display}.`;
+  const title = `The Wedding of ${wedding.names.display}`;
+  const description = wedding.events[0].date;
   return {
     title,
     description,
-    openGraph: { title, description, images: ["/images/og-image.jpg"], type: "website" },
+    openGraph: { title, description, images: [{ url: "/images/og-image-v2.jpg", width: 853, height: 853 }], type: "website" },
   };
 }
 
