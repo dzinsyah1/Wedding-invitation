@@ -1053,7 +1053,136 @@ canvas {
   50% { border-color: rgba(232, 184, 74, 0.95); box-shadow: 0 0 14px 1px rgba(232, 184, 74, 0.35); }
 }
 
+/* ---------- Primary CTA on the opening screen ---------- */
+.explore-cta-wrap {
+  animation: ctaBreathe 2.4s ease-in-out infinite;
+}
+
+.explore-cta {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(40, 50, 40, 0.28);
+  animation: ctaGlow 2.4s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+
+.explore-cta:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.explore-cta:active {
+  transform: scale(0.97);
+}
+
+.explore-cta:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* Rotating light that shows through as the button's border. */
+.explore-cta::before {
+  content: "";
+  position: absolute;
+  z-index: -3;
+  top: 50%;
+  left: 50%;
+  width: 320px;
+  height: 320px;
+  margin: -160px 0 0 -160px;
+  background: conic-gradient(
+    rgba(232, 184, 74, 0.6) 0deg 200deg,
+    #f6dfa6 280deg,
+    #ffffff 340deg,
+    rgba(232, 184, 74, 0.6) 360deg
+  );
+  animation: ctaSpin 2.8s linear infinite;
+}
+
+.explore-cta::after {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: 2px;
+  border-radius: inherit;
+  background: linear-gradient(180deg, #4d5e50 0%, #303c32 100%);
+  transition: filter 0.2s ease;
+}
+
+.explore-cta:hover::after {
+  filter: brightness(1.18);
+}
+
+.explore-cta-shine {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 35%, rgba(255, 236, 180, 0.5) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: dateShine 3.2s ease-in-out 0.8s infinite;
+}
+
+.explore-cta-star {
+  display: inline-block;
+  color: #f6dfa6;
+  animation: ctaTwinkle 1.6s ease-in-out infinite;
+}
+
+.explore-cta-ring {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 2px solid rgba(232, 184, 74, 0.85);
+  opacity: 0;
+  animation: hintPulse 2.4s ease-out infinite;
+}
+
+.explore-cta-ring-2 {
+  animation-delay: 1.2s;
+}
+
+.explore-cta-bloom {
+  pointer-events: none;
+  position: absolute;
+  line-height: 1;
+  opacity: 0;
+  animation: ctaBloom 3.2s ease-in-out infinite;
+}
+
+@keyframes ctaBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+
+@keyframes ctaGlow {
+  0%, 100% { box-shadow: 0 12px 28px rgba(40, 50, 40, 0.28), 0 0 10px rgba(232, 184, 74, 0.25); }
+  50% { box-shadow: 0 14px 32px rgba(40, 50, 40, 0.32), 0 0 26px 3px rgba(232, 184, 74, 0.65); }
+}
+
+@keyframes ctaSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ctaTwinkle {
+  0%, 100% { transform: scale(1) rotate(0); }
+  50% { transform: scale(1.4) rotate(90deg); }
+}
+
+@keyframes ctaBloom {
+  0%, 100% { opacity: 0; transform: translateY(4px) scale(0.2) rotate(-40deg); }
+  30%, 60% { opacity: 1; transform: translateY(-3px) scale(1) rotate(0); }
+  85% { opacity: 0; transform: translateY(-9px) scale(0.8) rotate(25deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .explore-cta-wrap,
+  .explore-cta,
+  .explore-cta::before,
+  .explore-cta-shine,
+  .explore-cta-star,
+  .explore-cta-ring,
+  .explore-cta-bloom,
   .animate-floaty,
   .animate-drift,
   .animate-fade-up,

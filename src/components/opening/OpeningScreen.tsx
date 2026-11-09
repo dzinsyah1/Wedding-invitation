@@ -66,19 +66,28 @@ export default function OpeningScreen({
           <GuestCard name={guestName} label="Teruntuk Yth." size="sm" className="animate-fade-up mt-5" />
         ) : null}
         <div className={`animate-fade-up flex flex-col items-center gap-3 ${guestName ? "mt-6" : "mt-8"}`} style={{ animationDelay: "0.42s" }}>
-          <button
-            type="button"
-            data-testid="enter-garden"
-            onPointerDown={(event) => event.stopPropagation()}
-            onClick={(event) => {
-              event.stopPropagation();
-              const r = event.currentTarget.getBoundingClientRect();
-              onEnter({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
-            }}
-            className="min-h-12 w-full max-w-[280px] rounded-full border border-[var(--gold)]/80 bg-[var(--ink)] px-8 py-3 text-[11px] tracking-[0.28em] text-[var(--ivory)] shadow-[0_12px_28px_rgba(40,50,40,0.25)] transition hover:bg-[var(--brown)]"
-          >
-            ✦ JELAJAHI TAMAN
-          </button>
+          <div className="explore-cta-wrap relative w-full max-w-[280px]">
+            <span aria-hidden className="explore-cta-ring" />
+            <span aria-hidden className="explore-cta-ring explore-cta-ring-2" />
+            <button
+              type="button"
+              data-testid="enter-garden"
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={(event) => {
+                event.stopPropagation();
+                const r = event.currentTarget.getBoundingClientRect();
+                onEnter({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
+              }}
+              className="explore-cta min-h-[52px] w-full whitespace-nowrap rounded-full px-4 py-3 text-[12px] font-semibold tracking-[0.28em] text-[var(--ivory)]"
+            >
+              <span aria-hidden className="explore-cta-shine" />
+              <span aria-hidden className="explore-cta-star">✦</span> JELAJAHI TAMAN
+            </button>
+            <span aria-hidden className="explore-cta-bloom left-[6%] -top-3 text-[15px] text-[var(--gold)]">✿</span>
+            <span aria-hidden className="explore-cta-bloom right-[10%] -top-3.5 text-[13px] text-[#e6a9b0] [animation-delay:0.9s]">✿</span>
+            <span aria-hidden className="explore-cta-bloom -left-3 top-1/2 text-[11px] text-[#e6a9b0] [animation-delay:1.7s]">✦</span>
+            <span aria-hidden className="explore-cta-bloom -right-3 top-[20%] text-[12px] text-[var(--gold)] [animation-delay:2.4s]">✦</span>
+          </div>
           <button
             type="button"
             data-testid="view-invitation"
